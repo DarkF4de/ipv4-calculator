@@ -11,6 +11,7 @@ def address_maker(x):
             print("A legitimate octade must be between 0-255")
             return j
 
+
 # Calls a function that calculates the mask of an IP address through given class and saves each mask octade
 def mask_calculator_class(x):
     if x=="A":
@@ -37,6 +38,8 @@ def class_calculator(first_octade):
         return "D"
     else:
         return "E"
+
+
 # calls a function that calculates the CIDR of an IP address through given mask. Will return None if class is D/E
 def cidr_calculator(a,b,c,d):
     if b==c==d==0:
@@ -70,6 +73,7 @@ def cidr_calculator(a,b,c,d):
     else:
         return None
 
+
 # calls a function that calculates the mask of an IP address through given CIDR and saves each octade
 def mask_calculator_cidr(cidr):
     if cidr>=0 and cidr<=32:
@@ -102,6 +106,42 @@ def mask_calculator_cidr(cidr):
                 else:
                     d=d+2**i
 
+
+# calls a function that converts a decimal number to a binary number in a stored list
+def dec_to_bin(x):
+    L=[]
+    if x!=0:
+        while x!=0:
+            a = x%2
+            L.append(a)
+            x = x//2
+    else:
+        for i in range(8):
+            L.append(0)
+    Ln = L[::-1]
+    return Ln
+
+
+
+# calls a function that converts a binary number in a sequence from a list, to a decimal number
+def bin_to_dec(L):
+    number = 0
+    revL = L[::-1]
+    for i in range(len(revL)):
+        if revL[i]==1:
+            number = number + 2**i
+    return number
+
+
+binary_one = dec_to_bin(192)
+print(binary_one)
+print(bin_to_dec(binary_one))
+
+
+
+
+
+# def network_address():
 # ---------------------------------------------- SUBNET PORTION ----------------------------------------------
 # calls a function that determines the bits that should be given to the Network ID of the IPv4 depending on user choice
 def network_bits_calculator(answer):
@@ -111,9 +151,7 @@ def network_bits_calculator(answer):
             return i
 
 
-#def network_address(cidr,network_bits):   WILL BE DONE WHEN MASK CALCULATOR FROMMM CIDR IS MADE TO CALL IT IN NEW_MASK
- #   new_cidr = cidr+network_bits
-  #  new_mask = new_cidr
+# will be made later for the subnet addresses
 # ---------------------------------------------- MAIN PROGRAM ----------------------------------------------
 
 print("SIMPLE IPV4 CALCULATOR")
@@ -152,7 +190,7 @@ ipv4_address = (f"{first_octade}.{second_octade}.{third_octade}.{fourth_octade}"
 print(f"Your IP address is {ipv4_address}")
 
 while True:
-    ip_choice = str(input("Is this IPv4 address classful or classless? [Classful/Classless]: ")).strip().lower()
+    ip_choice = str(input("Is this IPv4 address Classful or Classless? [classful/classless]: ")).strip().lower()
     if "classful" in ip_choice:
         mask_class = class_calculator(first_octade)
         print(f"Class: {mask_class}")
@@ -171,7 +209,7 @@ while True:
         continue
 
 
-if first_mask_octade == None:
+if first_mask_octade == None: # Checks True only if a classful IP was given that was Class D/E
     print(f"Subnet Mask: {fourth_mask_octade}")
 else:
     print(f"Subnet Mask: {first_mask_octade}.{second_mask_octade}.{third_mask_octade}.{fourth_mask_octade}")
@@ -179,6 +217,8 @@ if cidr==None:
     print(f"CIDR: {cidr}")
 else:
     print(f"CIDR: /{cidr}")
+
+# add a check for class D/E and a parameter check for possible subnets later
 y = int(input("How many subnets would you like? "))
 network_bits = network_bits_calculator(y)
 equal_subnets = 2**network_bits
