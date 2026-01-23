@@ -119,8 +119,9 @@ def dec_to_bin(x):
         for i in range(8):
             L.append(0)
     Ln = L[::-1]
+    while len(Ln)<8:
+        Ln.insert(0,0) # makes sure list is always at least 8 digits to use for comparison
     return Ln
-
 
 
 # calls a function that converts a binary number in a sequence from a list, to a decimal number
@@ -133,15 +134,44 @@ def bin_to_dec(L):
     return number
 
 
-binary_one = dec_to_bin(192)
-print(binary_one)
-print(bin_to_dec(binary_one))
+# calls a giant function that takes in 8 arguments (4 octades for ip, 4 for mask), converts them to binary, compares them, and returns the network address octades
+def network_address(a1,b1,c1,d1,a,b,c,d):
+    first_sub_octade = dec_to_bin(a1)
+    second_sub_octade = dec_to_bin(b1)
+    third_sub_octade = dec_to_bin(c1)
+    fourth_sub_octade = dec_to_bin(d1)
+    first_bin_octade = dec_to_bin(a)
+    second_bin_octade = dec_to_bin(b)
+    third_bin_octade = dec_to_bin(c)
+    fourth_bin_octade = dec_to_bin(d)
+    N1 = []
+    N2 = []
+    N3 = []
+    N4 = []
+    for i in range(8):
+        if first_sub_octade[i]==1 and first_bin_octade[i]==1:
+            N1.append(1)
+        else:
+            N1.append(0)
+    for i in range(8):
+        if second_sub_octade[i]==1 and second_bin_octade[i]==1:
+            N2.append(1)
+        else:
+            N2.append(0)
+    for i in range(8):
+        if third_sub_octade[i]==1 and third_bin_octade[i]==1:
+            N3.append(1)
+        else:
+            N3.append(0)
+    for i in range(8):
+        if fourth_sub_octade[i]==1 and fourth_bin_octade[i]==1:
+            N4.append(1)
+        else:
+            N4.append(0)
+    return N1,N2,N3,N4
 
 
 
-
-
-# def network_address():
 # ---------------------------------------------- SUBNET PORTION ----------------------------------------------
 # calls a function that determines the bits that should be given to the Network ID of the IPv4 depending on user choice
 def network_bits_calculator(answer):
@@ -214,13 +244,28 @@ if first_mask_octade == None: # Checks True only if a classful IP was given that
 else:
     print(f"Subnet Mask: {first_mask_octade}.{second_mask_octade}.{third_mask_octade}.{fourth_mask_octade}")
 if cidr==None:
-    print(f"CIDR: {cidr}")
+    print(f"CIDR: N/A")
 else:
     print(f"CIDR: /{cidr}")
 
-# add a check for class D/E and a parameter check for possible subnets later
-y = int(input("How many subnets would you like? "))
-network_bits = network_bits_calculator(y)
-equal_subnets = 2**network_bits
-print(f"Your equal subnets will be {equal_subnets}")
+if cidr!=None:
+    net1,net2,net3,net4 = network_address(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade,first_octade,second_octade,third_octade,fourth_octade)
+    first_net_octade = bin_to_dec(net1)
+    second_net_octade = bin_to_dec(net2)
+    third_net_octade = bin_to_dec(net3)
+    fourth_net_octade = bin_to_dec(net4)
+    network_address = (f"{first_net_octade}.{second_net_octade}.{third_net_octade}.{fourth_net_octade}")
+    print(f"Network Address: {network_address}")
 
+if cidr!=None:
+    y = int(input("How many subnets would you like? "))
+    network_bits = network_bits_calculator(y)
+    equal_subnets = 2**network_bits
+    print(f"Your equal subnets will be {equal_subnets}")
+else:
+    if mask_class=="D":
+        print("A Mulitcast IPv4 address cannot be subnetted")
+    else:
+        print("An Expirimental/Reserved IPv4 address cannot be subnetted")
+# Maybe there is a way to clump up all that information in like a seperate function or SOMETHING? its huge clutter in my opinion
+# add a check for class D/E and a parameter check for possible subnets later
