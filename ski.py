@@ -134,41 +134,63 @@ def bin_to_dec(L):
     return number
 
 
-# calls a giant function that takes in 8 arguments (4 octades for ip, 4 for mask), converts them to binary, compares them, and returns the network address octades
+def mask_binary(a1,b1,c1,d1):
+    first_mask_octade = dec_to_bin(a1)
+    second_mask_octade = dec_to_bin(b1)
+    third_mask_octade = dec_to_bin(c1)
+    fourth_mask_octade = dec_to_bin(d1)
+    return first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade
+
+# calls a function that takes in 8 arguments (4 octades for ip, 4 for mask), converts them to binary, compares them, and returns the network address octades
 def network_address(a1,b1,c1,d1,a,b,c,d):
-    first_sub_octade = dec_to_bin(a1)
-    second_sub_octade = dec_to_bin(b1)
-    third_sub_octade = dec_to_bin(c1)
-    fourth_sub_octade = dec_to_bin(d1)
-    first_bin_octade = dec_to_bin(a)
-    second_bin_octade = dec_to_bin(b)
-    third_bin_octade = dec_to_bin(c)
-    fourth_bin_octade = dec_to_bin(d)
+    first_mask_octade = dec_to_bin(a1)
+    second_mask_octade = dec_to_bin(b1)
+    third_mask_octade = dec_to_bin(c1)
+    fourth_mask_octade = dec_to_bin(d1)
+    first_octade = dec_to_bin(a)
+    second_octade = dec_to_bin(b)
+    third_octade = dec_to_bin(c)
+    fourth_octade = dec_to_bin(d)
     N1 = []
     N2 = []
     N3 = []
     N4 = []
     for i in range(8):
-        if first_sub_octade[i]==1 and first_bin_octade[i]==1:
+        if first_mask_octade[i]==1 and first_octade[i]==1:
             N1.append(1)
         else:
             N1.append(0)
     for i in range(8):
-        if second_sub_octade[i]==1 and second_bin_octade[i]==1:
+        if second_mask_octade[i]==1 and second_octade[i]==1:
             N2.append(1)
         else:
             N2.append(0)
     for i in range(8):
-        if third_sub_octade[i]==1 and third_bin_octade[i]==1:
+        if third_mask_octade[i]==1 and third_octade[i]==1:
             N3.append(1)
         else:
             N3.append(0)
     for i in range(8):
-        if fourth_sub_octade[i]==1 and fourth_bin_octade[i]==1:
+        if fourth_mask_octade[i]==1 and fourth_octade[i]==1:
             N4.append(1)
         else:
             N4.append(0)
     return N1,N2,N3,N4
+
+
+
+def broadcast_address(a1,b1,c1,d1,a,b,c,d):
+    for i in range(len(a1)):
+        if a1[i]==0:
+            a[i]=1
+        if b1[i]==0:
+            b[i]=1
+        if c1[i]==0:
+            c[i]=1
+        if d1[i]==0:
+            d[i]=1
+    return a,b,c,d
+
 
 
 
@@ -248,6 +270,8 @@ if cidr==None:
 else:
     print(f"CIDR: /{cidr}")
 
+first_mask_net_octade,second_mask_net_octade,third_mask_net_octade,fourth_mask_net_octade = mask_binary(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade)
+
 if cidr!=None:
     net1,net2,net3,net4 = network_address(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade,first_octade,second_octade,third_octade,fourth_octade)
     first_net_octade = bin_to_dec(net1)
@@ -256,6 +280,13 @@ if cidr!=None:
     fourth_net_octade = bin_to_dec(net4)
     network_address = (f"{first_net_octade}.{second_net_octade}.{third_net_octade}.{fourth_net_octade}")
     print(f"Network Address: {network_address}")
+    broad1,broad2,broad3,broad4 = broadcast_address(first_mask_net_octade,second_mask_net_octade,third_mask_net_octade,fourth_mask_net_octade,net1,net2,net3,net4)
+    first_broad_octade = bin_to_dec(broad1)
+    second_broad_octade = bin_to_dec(broad2)
+    third_broad_octade = bin_to_dec(broad3)
+    fourth_broad_octade = bin_to_dec(broad4)
+    broadcast_address = (f"{first_broad_octade}.{second_broad_octade}.{third_broad_octade}.{fourth_broad_octade}")
+    print(f"Broadcast Address: {broadcast_address}")
 
 if cidr!=None:
     y = int(input("How many subnets would you like? "))
