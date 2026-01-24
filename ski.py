@@ -211,9 +211,34 @@ def subnet_mask(new_cidr):
     return first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade
 
 def network_sub_address(s1,s2,s3,s4,a,b,c,d):
-
+    SN1 = []
+    SN2 = []
+    SN3 = []
+    SN4 = []
+    for i in range(8):
+        if s1[i]==1 and a[i]==1:
+            SN1.append(1)
+        else:
+            SN1.append(0)
+    for i in range(8):
+        if s2[i]==1 and b[i]==1:
+            SN2.append(1)
+        else:
+            SN2.append(0)
+    for i in range(8):
+        if s3[i]==1 and c[i]==1:
+            SN3.append(1)
+        else:
+            SN3.append(0)
+    for i in range(8):
+        if s4[i]==1 and d[i]==1:
+            SN4.append(1)
+        else:
+            SN4.append(0)
+    return SN1,SN2,SN3,SN4
 # ---------------------------------------------- MAIN PROGRAM ----------------------------------------------
 
+# IPV4 ADD-UP
 print("SIMPLE IPV4 CALCULATOR")
 time.sleep(1.5)
 while True:
@@ -244,11 +269,12 @@ while True:
         continue
     else:
         break
-
-
 ipv4_address = (f"{first_octade}.{second_octade}.{third_octade}.{fourth_octade}")
 print(f"Your IP address is {ipv4_address}")
 
+
+
+#CLASS, MASK AND CIDR
 while True:
     ip_choice = str(input("Is this IPv4 address Classful or Classless? [classful/classless]: ")).strip().lower()
     if "classful" in ip_choice:
@@ -268,7 +294,6 @@ while True:
         print("Please give a legitimate answer")
         continue
 
-
 if first_mask_octade == None: # Checks True only if a classful IP was given that was Class D/E
     print(f"Subnet Mask: {fourth_mask_octade}")
 else:
@@ -279,9 +304,14 @@ else:
     print(f"CIDR: /{cidr}")
 
 
+
+# BINARY CONVERSION FOR LATER ON
 first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade = mask_binary(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade) # Returns the mask in binary octades
 first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade = octade_binary(first_octade,second_octade,third_octade,fourth_octade) # Returns the IPv4 in binary octades
 
+
+
+# NETWORK/BROADCAST ADDRESS
 if cidr!=None:
     net1,net2,net3,net4 = network_address(first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # compares binary mask and octade for network binary octades
     first_net_octade = bin_to_dec(net1) # returns them back to decimal
@@ -298,6 +328,9 @@ if cidr!=None:
     broadcast_address = (f"{first_broad_octade}.{second_broad_octade}.{third_broad_octade}.{fourth_broad_octade}")
     print(f"Broadcast Address: {broadcast_address}")
 
+
+
+#SUBNET INPUTS
 if cidr!=None:
     y = int(input("How many subnets would you like? "))
     while y>2**(32-cidr) or y<2:
