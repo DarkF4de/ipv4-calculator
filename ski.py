@@ -1,4 +1,3 @@
-import time
 # ---------------------------------------------- BASIC CALCULATOR PORTION ----------------------------------------------
 # Calls a function that stores every octade of the user's IP address
 def address_maker(x):
@@ -252,6 +251,22 @@ def broadcast_sub_address(a1,b1,c1,d1,a,b,c,d):
             d[i]=1
     return a,b,c,d
 
+
+# ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
+
+def find_usable_hosts(cidr):
+    usable_hosts = (2**(32-cidr))-2
+    return usable_hosts
+
+
+
+
+
+
+
+
+
+
 # ---------------------------------------------- MAIN PROGRAM ----------------------------------------------
 
 # IPV4 ADD-UP
@@ -292,13 +307,13 @@ print(f"Your IP address is {ipv4_address}")
 #CLASS, MASK AND CIDR
 while True:
     ip_choice = str(input("Is this IPv4 address Classful or Classless? [classful/classless]: ")).strip().lower()
-    if "classful" in ip_choice:
+    if ip_choice in ("classful","ful"):
         mask_class = class_calculator(first_octade)
         print(f"Class: {mask_class}")
         first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade = mask_calculator_class(mask_class)
         cidr = cidr_calculator(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade)
         break
-    elif "classless" in ip_choice:
+    elif ip_choice in ("classless","less"):
         cidr = int(input("What is your CIDR? "))
         while cidr<0 or cidr >32:
             print("A valid CIDR must be between 0-32")
@@ -321,8 +336,9 @@ else:
 
 
 # BINARY CONVERSION FOR NORMAL ADDRESSES
-first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade = mask_binary(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade) # Returns the mask in binary octades
-first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade = octade_binary(first_octade,second_octade,third_octade,fourth_octade) # Returns the IPv4 in binary octades
+if cidr!=None:
+    first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade = mask_binary(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade) # Returns the mask in binary octades
+    first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade = octade_binary(first_octade,second_octade,third_octade,fourth_octade) # Returns the IPv4 in binary octades
 
 
 
@@ -344,9 +360,25 @@ if cidr!=None:
     print(f"Broadcast Address: {broadcast_address}")
 
 
+#USER INPUT FOR SUBNET/SUPERNET/NOTHING
+while True:
+    z=str(input("Would you like to subnet this IPv4 address, supernet it or do nothing? [subnet/supernet/nothing]: ")).strip().lower()
+    if z in ("subnet","sub"):
+        yz = 1
+        break
+    elif z in ("supernet","super"):
+        yz = 0
+        break
+    elif z in ("nothing","n","none"):
+        yz = -1
+        break
+    else:
+        print("Please give a legitimate answer")
+        continue
+
 
 #SUBNET INPUTS/CALCULATIONS
-if cidr!=None:
+if cidr!=None and yz==1:
     y = int(input("How many subnets would you like? "))
     while y>2**(32-cidr) or y<2:
         print(f"You can only have from {2} up to {2**(32-cidr)} subnets")
@@ -375,9 +407,25 @@ if cidr!=None:
     print(f"Sub-Broadcast Address: {subbroadcast_address}")
 
 
-else:
+#SUPERNET INPUTS/CALCULATIONS
+elif cidr!=None and yz==0:
+    usable_networks = find_usable_hosts(cidr)
+
+
+
+
+
+
+elif cidr!=None and yz==-1:
+    print("Understood")
+
+
+if cidr==None:
     if mask_class=="D":
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
         print("An Expirimental/Reserved IPv4 address cannot be subnetted")
-
+#1. Work on supernetting
+#2. Add exceptValueError parameters
+#3. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
+#4. Close this shit with the READme.md on github and check for error handling
