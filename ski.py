@@ -217,10 +217,10 @@ def host_range(n1,n2,n3,n4,b1,b2,b3,b4,hosts): # takes in network octades and br
         nn4 = 0
     elif nn2<255:
         nn2=nn2+1
-        nn3 = 0
+        nn3,nn4 = 0,0
     elif nn1<255:
         nn1=nn1+1
-        nn2 = 0
+        nn2,nn3,nn4 = 0,0,0
     if bn4>0:
         bn4=bn4-1
     elif bn3>0:
@@ -228,10 +228,10 @@ def host_range(n1,n2,n3,n4,b1,b2,b3,b4,hosts): # takes in network octades and br
         bn4 = 255
     elif bn2>0:
         bn2=bn2-1
-        bn3 = 255
+        bn3,bn4 = 255,255
     elif bn1>0:
         bn1=bn1-1
-        bn2 = 255
+        bn2,bn3,bn4 = 255,255,255
     return nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4
 
 
@@ -357,7 +357,7 @@ while True:
             print("A valid CIDR must be between 0-32")
             cidr = int(input("What is your CIDR? "))
         if cidr==31:
-            print(f"Note: IPv4 addresses with a /{cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total.")
+            print(f"Note: IPv4 addresses with a /{cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
         elif cidr==32:
             print(f"Note: IPv4 addresses with a /{cidr} CIDR are typically used in routing tables to identify specific hosts, since they only have 1 address in total.")
             exception = 1
@@ -382,7 +382,10 @@ else:
 if usable_hosts!=0:
     print(f"Usable Hosts: {usable_hosts}")
 else:
-    print("No Usable Hosts")
+    if cidr==31:
+        print(f"Usable Hosts: 2 (CIDR: /{cidr})")
+    else:
+        print("No Usable Hosts")
 
 # BINARY CONVERSION FOR NORMAL ADDRESSES
 if cidr!=None:
