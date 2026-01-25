@@ -4,7 +4,6 @@ def address_maker(x):
     while True:
         if x>=0 and x<256:
             return x
-            break
         else:
             j= -1
             print("A legitimate octade must be between 0-255")
@@ -210,60 +209,23 @@ def host_range(n1,n2,n3,n4,b1,b2,b3,b4,hosts): # takes in network octades and br
     bn1,bn2,bn3,bn4 = b1,b2,b3,b4
     if hosts==0:
         return 0,0,0,0,0,0,0,None
-    if n4<255:
-        if b4>0:
-            nn4 = n4+1
-            bn4 = b4-1
-        elif b3>0:
-            nn4 = n4+1
-            bn3 = b3-1
-        elif b2>0:
-            nn4 = n4+1
-            bn2 = b2-1
-        else:
-            nn4 = n4+1
-            bn1 = b1-1
-    elif n3<255:
-        if b4>0:
-            nn3 = n3+1
-            bn4 = b4-1
-        elif b3>0:
-            nn3 = n3+1
-            bn3 = b3-1
-        elif b2>0:
-            nn3 = n3+1
-            bn2 = b2-1
-        else:
-            nn3 = n3+1
-            bn1 = b1-1
-    elif n2<255:
-        if b4>0:
-            nn2 = n2+1
-            bn4 = b4-1
-        elif b3>0:
-            nn2 = n2+1
-            bn3 = b3-1
-        elif b2>0:
-            nn2 = n2+1
-            bn2 = b2-1
-        else:
-            nn2 = n2+1
-            bn1 = b1-1
-    elif n1<255:
-        if b4>0:
-            nn1 = n1+1
-            bn4 = b4-1
-        elif b3>0:
-            nn1 = n1+1
-            bn3 = b3-1
-        elif b2>0:
-            nn1 = n1+1
-            bn2 = b2-1
-        else:
-            nn1 = n1+1
-            bn1 = b1-1
+    if nn4<255:
+        nn4=nn4+1
+    elif nn3<255:
+        nn3=nn3+1
+    elif nn2<255:
+        nn2=nn2+1
+    elif nn1<255:
+        nn1=nn1+1
+    if bn4>0:
+        bn4=bn4-1
+    elif bn3>0:
+        bn3=bn3-1
+    elif bn2>0:
+        bn2=bn2-1
+    elif bn1>0:
+        bn1=bn1-1
     return nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4
-
 
 
 
@@ -450,7 +412,7 @@ while True:
     if z in ("subnet","sub"):
         yz = 1
         break
-    elif z in ("supernet","super"):
+    elif z in ("supernet","super","sup"):
         yz = 0
         break
     elif z in ("nothing","n","none"):
