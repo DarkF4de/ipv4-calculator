@@ -22,7 +22,7 @@ def mask_calculator_class(x):
     elif x=="D":
         return None, None, None, "N/A (Multicast Address)"
     else:
-        return None, None, None, "N/A (Expirimental/Reserved)"
+        return None, None, None, "N/A (Experimental/Reserved)"
 
 
 # Calls a function that calculates the class through the first octade of the IPv4
@@ -582,7 +582,7 @@ if cidr==None: # Check for cidr == None (happens with class D/E)
     if mask_class=="D":
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
-        print("An Expirimental/Reserved IPv4 address cannot be subnetted")
+        print("An Experimental/Reserved IPv4 address cannot be subnetted")
 #1. Add exceptValueError parameters
 #2. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
 #3. Close this shit with the READme.md on github and check for error handling
