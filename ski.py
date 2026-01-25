@@ -194,10 +194,77 @@ def broadcast_address(a1,b1,c1,d1,a,b,c,d):
     return a,b,c,d
 
 
-def host_range(n1,n2,n3,n4,b1,b2,b3,b4): # takes in network octades and broadcast octades in decimals
-    if b4>n4:
-        bn4 = b4-1
-        nn4 = n4+1
+# calls a function that finds the usable hosts (addresses excluding network/broadcast)
+def find_usable_hosts(cidr):
+    if cidr==None:
+        return "N/A"
+    elif cidr>=31:
+        return 0
+    usable_hosts = (2**(32-cidr))-2
+    return usable_hosts
+
+
+# calls a function that determines the usable network range
+def host_range(n1,n2,n3,n4,b1,b2,b3,b4,hosts): # takes in network octades and broadcast octades in decimals
+    nn1,nn2,nn3,nn4 = n1,n2,n3,n4
+    bn1,bn2,bn3,bn4 = b1,b2,b3,b4
+    if hosts==0:
+        return 0,0,0,0,0,0,0,None
+    if n4<255:
+        if b4>0:
+            nn4 = n4+1
+            bn4 = b4-1
+        elif b3>0:
+            nn4 = n4+1
+            bn3 = b3-1
+        elif b2>0:
+            nn4 = n4+1
+            bn2 = b2-1
+        else:
+            nn4 = n4+1
+            bn1 = b1-1
+    elif n3<255:
+        if b4>0:
+            nn3 = n3+1
+            bn4 = b4-1
+        elif b3>0:
+            nn3 = n3+1
+            bn3 = b3-1
+        elif b2>0:
+            nn3 = n3+1
+            bn2 = b2-1
+        else:
+            nn3 = n3+1
+            bn1 = b1-1
+    elif n2<255:
+        if b4>0:
+            nn2 = n2+1
+            bn4 = b4-1
+        elif b3>0:
+            nn2 = n2+1
+            bn3 = b3-1
+        elif b2>0:
+            nn2 = n2+1
+            bn2 = b2-1
+        else:
+            nn2 = n2+1
+            bn1 = b1-1
+    elif n1<255:
+        if b4>0:
+            nn1 = n1+1
+            bn4 = b4-1
+        elif b3>0:
+            nn1 = n1+1
+            bn3 = b3-1
+        elif b2>0:
+            nn1 = n1+1
+            bn2 = b2-1
+        else:
+            nn1 = n1+1
+            bn1 = b1-1
+    return nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4
+
+
 
 
 # ---------------------------------------------- SUBNET PORTION ----------------------------------------------
@@ -259,12 +326,6 @@ def broadcast_sub_address(a1,b1,c1,d1,a,b,c,d):
 
 # ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
 
-def find_usable_hosts(cidr):
-    usable_hosts = (2**(32-cidr))-2
-    return usable_hosts
-
-
-
 
 
 
@@ -309,7 +370,7 @@ print(f"Your IP address is {ipv4_address}")
 
 
 
-#CLASS, MASK AND CIDR
+#CLASS MASK CIDR AND USABLE HOSTS
 exception = 500
 while True:
     ip_choice = str(input("Is this IPv4 address Classful or Classless? [classful/classless]: ")).strip().lower()
@@ -318,6 +379,7 @@ while True:
         print(f"Class: {mask_class}")
         first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade = mask_calculator_class(mask_class)
         cidr = cidr_calculator(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade)
+        usable_hosts = find_usable_hosts(cidr)
         break
     elif ip_choice in ("classless","less"):
         cidr = int(input("What is your CIDR? "))
@@ -332,6 +394,7 @@ while True:
         elif cidr==0:
             exception = 0
         first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade = mask_calculator_cidr(cidr)
+        usable_hosts = find_usable_hosts(cidr)
         break
     else:
         print("Please give a legitimate answer")
@@ -346,7 +409,10 @@ if cidr==None:
 else:
     print(f"CIDR: /{cidr}")
 
-
+if usable_hosts!=0:
+    print(f"Usable Hosts: {usable_hosts}")
+else:
+    print("No Usable Hosts")
 
 # BINARY CONVERSION FOR NORMAL ADDRESSES
 if cidr!=None:
@@ -371,6 +437,11 @@ if cidr!=None:
     fourth_broad_octade = bin_to_dec(broad4)
     broadcast_address = (f"{first_broad_octade}.{second_broad_octade}.{third_broad_octade}.{fourth_broad_octade}")
     print(f"Broadcast Address: {broadcast_address}")
+    nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4 = host_range(first_net_octade,second_net_octade,third_net_octade,fourth_net_octade,first_broad_octade,second_broad_octade,third_broad_octade,fourth_broad_octade,usable_hosts)
+    if bn4==None:
+        print("No Network Range")
+    else:
+        print(f"Usable Network Range: {nn1}.{nn2}.{nn3}.{nn4}-{bn1}.{bn2}.{bn3}.{bn4}")
 
 
 #USER INPUT FOR SUBNET/SUPERNET/NOTHING
@@ -400,9 +471,14 @@ if cidr!=None and yz==1 and exception!=1:
     equal_subnets = 2**network_bits
     print(f"Your equal subnets will be {equal_subnets}")
     new_cidr = cidr+network_bits
-    print(f"New CIDR: /{new_cidr}")
     first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = subnet_mask(new_cidr)
     print(f"New Subnet Mask: {first_submask_octade}.{second_submask_octade}.{third_submask_octade}.{fourth_submask_octade}")
+    print(f"New CIDR: /{new_cidr}")
+    usable_hosts = find_usable_hosts(new_cidr)
+    if usable_hosts!=0:
+        print(f"Usable Hosts: {usable_hosts}")
+    else:
+        print("No Usable Hosts")
     first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade = mask_binary(first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade) # turns the subnet mask octades in binary
     subnet1,subnet2,subnet3,subnet4 = network_sub_address(first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the subnet mask octades (in binary from above) compared to the normal IPv4 octades in binary
     first_subnet_octade = bin_to_dec(subnet1) # returns them back to decimal
@@ -424,7 +500,7 @@ elif cidr!=None and yz==1 and exception==1:
 
 #SUPERNET INPUTS/CALCULATIONS
 elif cidr!=None and yz==0 and exception!=0:
-    print("smth")
+    print("later")
 
 elif cidr!=None and yz==0 and exception==0:
     print(f"Cannot be supernetted further since it already covers the entire IPv4 range. (/{cidr} CIDR)")
