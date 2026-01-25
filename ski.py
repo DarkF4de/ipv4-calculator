@@ -1,4 +1,5 @@
 # ---------------------------------------------- BASIC CALCULATOR PORTION ----------------------------------------------
+
 # Calls a function that stores every octade of the user's IP address
 def address_maker(x):
     while True:
@@ -132,7 +133,7 @@ def bin_to_dec(L):
     return number
 
 
-# calls a function that returns the mask in binary so it can be compared with the IPv4 later on for the broadcast address
+# calls a function that returns the mask octades in binary so it can be compared with the IPv4 address later on for the broadcast address
 def mask_binary(a1,b1,c1,d1):
     first_mask_octade = dec_to_bin(a1)
     second_mask_octade = dec_to_bin(b1)
@@ -235,20 +236,21 @@ def host_range(n1,n2,n3,n4,b1,b2,b3,b4,hosts): # takes in network octades and br
     return nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4
 
 
-
-# ---------------------------------------------- SUBNET PORTION ----------------------------------------------
-# calls a function that determines the bits that should be given to the Network ID of the IPv4 depending on user choice
-def network_bits_calculator(answer):
+# calls a function that determines the bits that should be given to the Network ID or Host ID of the IPv4 depending on user choice
+def bits_calculator(answer):
     for i in range(1,33):
         value = 2**i
         if value>=answer:
             return i
 
 
+# ---------------------------------------------- SUBNET PORTION ----------------------------------------------
+
 # calls a function that simply takes the new cidr and uses the mask calculator from cidr to find the new mask
 def subnet_mask(new_cidr):
     first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = mask_calculator_cidr(new_cidr)
     return first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade
+
 
 # calls a function that takes in 8 arguments (4 octades for mask, 4 for ip), converts them to binary, compares them, and returns the sub-network address octades
 def network_sub_address(s1,s2,s3,s4,a,b,c,d):
@@ -296,11 +298,54 @@ def broadcast_sub_address(a1,b1,c1,d1,ak,bk,ck,dk):
 
 # ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
 
+# calls a function that simply takes the new cidr and uses the mask calculator from cidr to find the new mask
+def supernet_mask(new_cidr):
+    first_supmask_octade,second_supmask_octade,third_supmask_octade,fourth_supmask_octade = mask_calculator_cidr(new_cidr)
+    return first_supmask_octade,second_supmask_octade,third_supmask_octade,fourth_supmask_octade
 
 
+# calls a function that takes in 8 arguments (4 octades for mask, 4 for ip), converts them to binary, compares them, and returns the super-network address octades
+def network_super_address(s1,s2,s3,s4,a,b,c,d):
+    SN1 = []
+    SN2 = []
+    SN3 = []
+    SN4 = []
+    for i in range(8):
+        if s1[i]==1 and a[i]==1:
+            SN1.append(1)
+        else:
+            SN1.append(0)
+    for i in range(8):
+        if s2[i]==1 and b[i]==1:
+            SN2.append(1)
+        else:
+            SN2.append(0)
+    for i in range(8):
+        if s3[i]==1 and c[i]==1:
+            SN3.append(1)
+        else:
+            SN3.append(0)
+    for i in range(8):
+        if s4[i]==1 and d[i]==1:
+            SN4.append(1)
+        else:
+            SN4.append(0)
+    return SN1,SN2,SN3,SN4
 
 
-
+# calls a function that takes in the mask and the network address of the IPv4 address to compare them and return the super-broadcast address octades
+def broadcast_super_address(a1,b1,c1,d1,ak,bk,ck,dk):
+    a,b,c,d = ak[:],bk[:],ck[:],dk[:] # creates a fresh copy of the given lists
+    for i in range(len(a1)):
+        if a1[i]==0:
+            a[i]=1
+        if b1[i]==0:
+            b[i]=1
+        if c1[i]==0:
+            c[i]=1
+        if d1[i]==0:
+            d[i]=1
+    return a,b,c,d
 
 
 # ---------------------------------------------- MAIN PROGRAM ----------------------------------------------
@@ -345,7 +390,7 @@ exception = 500
 while True:
     ip_choice = str(input("Is this IPv4 address Classful or Classless? [classful/classless]: ")).strip().lower()
     if ip_choice in ("classful","ful"):
-        mask_class = class_calculator(first_octade)
+        mask_class = class_calculator(first_octade) #calculate class from first octade
         print(f"Class: {mask_class}")
         first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade = mask_calculator_class(mask_class)
         cidr = cidr_calculator(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade)
@@ -387,6 +432,8 @@ else:
     else:
         print("No Usable Hosts")
 
+
+
 # BINARY CONVERSION FOR NORMAL ADDRESSES
 if cidr!=None:
     first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade = mask_binary(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade) # Returns the mask in binary octades
@@ -417,6 +464,7 @@ if cidr!=None:
         print(f"Usable Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
 
 
+
 #USER INPUT FOR SUBNET/SUPERNET/NOTHING
 while True:
     z=str(input("Would you like to subnet this IPv4 address, supernet it or do nothing? [subnet/supernet/nothing]: ")).strip().lower()
@@ -434,17 +482,18 @@ while True:
         continue
 
 
+
 #SUBNET INPUTS/CALCULATIONS
 if cidr!=None and yz==1 and exception!=1:
     y = int(input("How many subnets would you like? "))
     while y>2**(32-cidr) or y<2:
         print(f"You can only have from {2} up to {2**(32-cidr)} subnets")
         y = int(input("How many subnets would you like? "))
-    network_bits = network_bits_calculator(y)
+    network_bits = bits_calculator(y) # given to Network ID
     equal_subnets = 2**network_bits
-    print(f"Your equal subnets will be {equal_subnets}")
+    print(f"Your equal subnets will be : {equal_subnets}")
     new_cidr = cidr+network_bits
-    if cidr==31:
+    if cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
     elif cidr==32:
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used in routing tables to identify specific hosts, since they only have 1 address in total.")
@@ -452,7 +501,7 @@ if cidr!=None and yz==1 and exception!=1:
     print(f"New Subnet Mask: {first_submask_octade}.{second_submask_octade}.{third_submask_octade}.{fourth_submask_octade}")
     print(f"New CIDR: /{new_cidr}")
     usable_hosts = find_usable_hosts(new_cidr)
-    if usable_hosts!=0:
+    if usable_hosts!=0: # would be 0 if cidr is /31 or /32
         print(f"Usable Hosts: {usable_hosts}")
     else:
         print("No Usable Hosts")
@@ -472,32 +521,50 @@ if cidr!=None and yz==1 and exception!=1:
     subbroadcast_address = (f"{first_subbroad_octade}.{second_subbroad_octade}.{third_subbroad_octade}.{fourth_subbroad_octade}")
     print(f"Sub-Broadcast Address: {subbroadcast_address}")
     nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4 = host_range(first_subnet_octade,second_subnet_octade,third_subnet_octade,fourth_subnet_octade,first_subbroad_octade,second_subbroad_octade,third_subbroad_octade,fourth_subbroad_octade,usable_hosts) # returns the network range between sub-network address and sub-broadcast address (usable hosts)
-    if bn4==None:
+    if bn4==None: # happens when cidr is /31 or /31 from 0 hosts check
         print("No Network Range")
     else:
         print(f"Usable Sub-Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
-elif cidr!=None and yz==1 and exception==1:
-    print(f"Cannot be subnetted further since it has only 1 network. (/{cidr} CIDR)")
+elif cidr!=None and yz==1 and exception==1: # Checks if CIDR is /32 therefore can't be subnetted
+    print(f"Cannot be subnetted further since it has only one network. (/{cidr} CIDR)")
+
 
 
 #SUPERNET INPUTS/CALCULATIONS
 elif cidr!=None and yz==0 and exception!=0:
-    print("later")
+    j = int(input("How many networks would you like to supernet to a single network? "))
+    while j>2**(cidr-0) or j<2:
+        print(f"You can only supernet from {2} up to {2**(cidr-0)} networks into one")
+        j = int(input("How many networks would you like to supernet to a single network? "))
+    network_bits = bits_calculator(j) # given to Host ID
+    networks_used = 2**network_bits
+    print(f"The amount of equal networks you will be using for supernetting will be: {networks_used}")
+    new_cidr = cidr-network_bits
+    print(new_cidr)
 
-elif cidr!=None and yz==0 and exception==0:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+elif cidr!=None and yz==0 and exception==0: # checks if CIDR is /0 therefore can't be supernetted
     print(f"Cannot be supernetted further since it already covers the entire IPv4 range. (/{cidr} CIDR)")
 
 
-
-
-
-
-
-elif cidr!=None and yz==-1:
+elif cidr!=None and yz==-1: # no answer, end of program.
     print("Understood")
 
 
-if cidr==None:
+if cidr==None: # Check for cidr == None (happens with class D/E)
     if mask_class=="D":
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
