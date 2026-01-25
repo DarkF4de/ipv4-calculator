@@ -180,7 +180,8 @@ def network_address(a1,b1,c1,d1,a,b,c,d):
 
 
 # calls a function that takes in the mask and the network address of the IPv4 address to compare them and return the broadcast address octades
-def broadcast_address(a1,b1,c1,d1,a,b,c,d):
+def broadcast_address(a1,b1,c1,d1,ak,bk,ck,dk):
+    a,b,c,d = ak[:],bk[:],ck[:],dk[:] # creates a fresh copy of the given lists
     for i in range(len(a1)):
         if a1[i]==0:
             a[i]=1
@@ -213,10 +214,13 @@ def host_range(n1,n2,n3,n4,b1,b2,b3,b4,hosts): # takes in network octades and br
         nn4=nn4+1
     elif nn3<255:
         nn3=nn3+1
+        nn4 = 0
     elif nn2<255:
         nn2=nn2+1
+        nn3 = 0
     elif nn1<255:
         nn1=nn1+1
+        nn2 = 0
     if bn4>0:
         bn4=bn4-1
     elif bn3>0:
@@ -273,7 +277,8 @@ def network_sub_address(s1,s2,s3,s4,a,b,c,d):
 
 
 # calls a function that takes in the mask and the network address of the IPv4 address to compare them and return the sub-broadcast address octades
-def broadcast_sub_address(a1,b1,c1,d1,a,b,c,d):
+def broadcast_sub_address(a1,b1,c1,d1,ak,bk,ck,dk):
+    a,b,c,d = ak[:],bk[:],ck[:],dk[:] # creates a fresh copy of the given lists
     for i in range(len(a1)):
         if a1[i]==0:
             a[i]=1
@@ -482,6 +487,7 @@ if cidr==None:
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
         print("An Expirimental/Reserved IPv4 address cannot be subnetted")
+#0. Fix all edge cases, try to optimize by reusing network and broadcast function for sub/supernet
 #1. Work on supernetting
 #2. Add exceptValueError parameters
 #3. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
