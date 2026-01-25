@@ -505,8 +505,8 @@ if cidr!=None and yz==1 and exception!=1:
         print(f"Usable Hosts: {usable_hosts}")
     else:
         print("No Usable Hosts")
-    first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade = mask_binary(first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade) # turns the subnet mask octades in binary
-    subnet1,subnet2,subnet3,subnet4 = network_sub_address(first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the subnet mask octades (in binary from above) compared to the normal IPv4 octades in binary
+    first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade = mask_binary(first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade) # turns the subnet mask octades to binary
+    subnet1,subnet2,subnet3,subnet4 = network_sub_address(first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the subnet mask octades (in binary from above) by comparing to the normal IPv4 octades in binary
     first_subnet_octade = bin_to_dec(subnet1) # returns them back to decimal
     second_subnet_octade = bin_to_dec(subnet2)
     third_subnet_octade = bin_to_dec(subnet3)
@@ -521,7 +521,7 @@ if cidr!=None and yz==1 and exception!=1:
     subbroadcast_address = (f"{first_subbroad_octade}.{second_subbroad_octade}.{third_subbroad_octade}.{fourth_subbroad_octade}")
     print(f"Sub-Broadcast Address: {subbroadcast_address}")
     nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4 = host_range(first_subnet_octade,second_subnet_octade,third_subnet_octade,fourth_subnet_octade,first_subbroad_octade,second_subbroad_octade,third_subbroad_octade,fourth_subbroad_octade,usable_hosts) # returns the network range between sub-network address and sub-broadcast address (usable hosts)
-    if bn4==None: # happens when cidr is /31 or /31 from 0 hosts check
+    if bn4==None: # happens when cidr is /31 or /32 from 0 hosts check
         print("No Network Range")
     else:
         print(f"Usable Sub-Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
@@ -545,27 +545,36 @@ elif cidr!=None and yz==0 and exception!=0:
     first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade = supernet_mask(new_cidr)
     print(f"New Supernet Mask: {first_supermask_octade}.{second_supermask_octade}.{third_supermask_octade}.{fourth_supermask_octade}")
     print(f"New CIDR: /{new_cidr}")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    usable_hosts = find_usable_hosts(new_cidr)
+    if usable_hosts!=0: # would be 0 if cidr is /31 or /32
+        print(f"Usable Hosts: {usable_hosts}")
+    else:
+        print("No Usable Hosts")
+    first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade = mask_binary(first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade) # turns the supernet mask octades to binary
+    supernet1,supernet2,supernet3,supernet4 = network_super_address(first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the supernet mask octades (in binary from above) by comparing to the normal IPv4 octades in binary
+    first_supernet_octade = bin_to_dec(supernet1) # returns them back to decimal
+    second_supernet_octade = bin_to_dec(supernet2)
+    third_supernet_octade = bin_to_dec(supernet3)
+    fourth_supernet_octade = bin_to_dec(supernet4)
+    supernetwork_address = (f"{first_supernet_octade}.{second_supernet_octade}.{third_supernet_octade}.{fourth_supernet_octade}")
+    print(f"Super-Network Address: {supernetwork_address}")
+    superbroad1,superbroad2,superbroad3,superbroad4 =  broadcast_super_address(first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade,supernet1,supernet2,supernet3,supernet4) # compares supernet mask and super network octades for super broadcast address
+    first_superbroad_octade = bin_to_dec(superbroad1) # returns them back to decimal
+    second_superbroad_octade = bin_to_dec(superbroad2)
+    third_superbroad_octade = bin_to_dec(superbroad3)
+    fourth_superbroad_octade = bin_to_dec(superbroad4)
+    superbroadcast_address = (f"{first_superbroad_octade}.{second_superbroad_octade}.{third_superbroad_octade}.{fourth_superbroad_octade}")
+    print(f"Super-Broadcast Address: {superbroadcast_address}")
+    nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4 = host_range(first_supernet_octade,second_supernet_octade,third_supernet_octade,fourth_supernet_octade,first_superbroad_octade,second_superbroad_octade,third_superbroad_octade,fourth_superbroad_octade,usable_hosts) # returns the network range between super-network address and super-broadcast address (usable hosts)
+    if bn4==None: # happens when cidr is /31 or /32 from 0 hosts check
+        print("No Network Range")
+    else:
+        print(f"Usable Super-Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
 elif cidr!=None and yz==0 and exception==0: # checks if CIDR is /0 therefore can't be supernetted
     print(f"Cannot be supernetted further since it already covers the entire IPv4 range. (/{cidr} CIDR)")
 
-
-elif cidr!=None and yz==-1: # no answer, end of program.
+#END OF PROGRAM CHECKS
+elif cidr!=None and yz==-1:
     print("Understood")
 
 
@@ -574,7 +583,6 @@ if cidr==None: # Check for cidr == None (happens with class D/E)
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
         print("An Expirimental/Reserved IPv4 address cannot be subnetted")
-#1. Work on supernetting
-#2. Add exceptValueError parameters
-#3. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
-#4. Close this shit with the READme.md on github and check for error handling
+#1. Add exceptValueError parameters
+#2. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
+#3. Close this shit with the READme.md on github and check for error handling
