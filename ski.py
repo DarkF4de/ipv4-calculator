@@ -225,10 +225,13 @@ def host_range(n1,n2,n3,n4,b1,b2,b3,b4,hosts): # takes in network octades and br
         bn4=bn4-1
     elif bn3>0:
         bn3=bn3-1
+        bn4 = 255
     elif bn2>0:
         bn2=bn2-1
+        bn3 = 255
     elif bn1>0:
         bn1=bn1-1
+        bn2 = 255
     return nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4
 
 
