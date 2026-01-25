@@ -194,6 +194,11 @@ def broadcast_address(a1,b1,c1,d1,a,b,c,d):
     return a,b,c,d
 
 
+def host_range(n1,n2,n3,n4,b1,b2,b3,b4): # takes in network octades and broadcast octades in decimals
+    if b4>n4:
+        bn4 = b4-1
+        nn4 = n4+1
+
 
 # ---------------------------------------------- SUBNET PORTION ----------------------------------------------
 # calls a function that determines the bits that should be given to the Network ID of the IPv4 depending on user choice
@@ -305,6 +310,7 @@ print(f"Your IP address is {ipv4_address}")
 
 
 #CLASS, MASK AND CIDR
+exception = 500
 while True:
     ip_choice = str(input("Is this IPv4 address Classful or Classless? [classful/classless]: ")).strip().lower()
     if ip_choice in ("classful","ful"):
@@ -318,6 +324,13 @@ while True:
         while cidr<0 or cidr >32:
             print("A valid CIDR must be between 0-32")
             cidr = int(input("What is your CIDR? "))
+        if cidr==31:
+            print(f"Note: IPv4 addresses with a /{cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total.")
+        elif cidr==32:
+            print(f"Note: IPv4 addresses with a /{cidr} CIDR are typically used in routing tables to identify specific hosts, since they only have 1 address in total.")
+            exception = 1
+        elif cidr==0:
+            exception = 0
         first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade = mask_calculator_cidr(cidr)
         break
     else:
@@ -378,7 +391,7 @@ while True:
 
 
 #SUBNET INPUTS/CALCULATIONS
-if cidr!=None and yz==1:
+if cidr!=None and yz==1 and exception!=1:
     y = int(input("How many subnets would you like? "))
     while y>2**(32-cidr) or y<2:
         print(f"You can only have from {2} up to {2**(32-cidr)} subnets")
@@ -405,11 +418,17 @@ if cidr!=None and yz==1:
     fourth_subbroad_octade = bin_to_dec(subbroad4)
     subbroadcast_address = (f"{first_subbroad_octade}.{second_subbroad_octade}.{third_subbroad_octade}.{fourth_subbroad_octade}")
     print(f"Sub-Broadcast Address: {subbroadcast_address}")
+elif cidr!=None and yz==1 and exception==1:
+    print(f"Cannot be subnetted further since it has only 1 network. (/{cidr} CIDR)")
 
 
 #SUPERNET INPUTS/CALCULATIONS
-elif cidr!=None and yz==0:
-    usable_networks = find_usable_hosts(cidr)
+elif cidr!=None and yz==0 and exception!=0:
+    print("smth")
+
+elif cidr!=None and yz==0 and exception==0:
+    print(f"Cannot be supernetted further since it already covers the entire IPv4 range. (/{cidr} CIDR)")
+
 
 
 
