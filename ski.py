@@ -414,7 +414,7 @@ if cidr!=None:
     if bn4==None:
         print("No Network Range")
     else:
-        print(f"Usable Network Range: {nn1}.{nn2}.{nn3}.{nn4}-{bn1}.{bn2}.{bn3}.{bn4}")
+        print(f"Usable Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
 
 
 #USER INPUT FOR SUBNET/SUPERNET/NOTHING
@@ -444,6 +444,10 @@ if cidr!=None and yz==1 and exception!=1:
     equal_subnets = 2**network_bits
     print(f"Your equal subnets will be {equal_subnets}")
     new_cidr = cidr+network_bits
+    if cidr==31:
+        print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
+    elif cidr==32:
+        print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used in routing tables to identify specific hosts, since they only have 1 address in total.")
     first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = subnet_mask(new_cidr)
     print(f"New Subnet Mask: {first_submask_octade}.{second_submask_octade}.{third_submask_octade}.{fourth_submask_octade}")
     print(f"New CIDR: /{new_cidr}")
@@ -467,6 +471,11 @@ if cidr!=None and yz==1 and exception!=1:
     fourth_subbroad_octade = bin_to_dec(subbroad4)
     subbroadcast_address = (f"{first_subbroad_octade}.{second_subbroad_octade}.{third_subbroad_octade}.{fourth_subbroad_octade}")
     print(f"Sub-Broadcast Address: {subbroadcast_address}")
+    nn1,nn2,nn3,nn4,bn1,bn2,bn3,bn4 = host_range(first_subnet_octade,second_subnet_octade,third_subnet_octade,fourth_subnet_octade,first_subbroad_octade,second_subbroad_octade,third_subbroad_octade,fourth_subbroad_octade,usable_hosts) # returns the network range between sub-network address and sub-broadcast address (usable hosts)
+    if bn4==None:
+        print("No Network Range")
+    else:
+        print(f"Usable Sub-Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
 elif cidr!=None and yz==1 and exception==1:
     print(f"Cannot be subnetted further since it has only 1 network. (/{cidr} CIDR)")
 
@@ -493,7 +502,6 @@ if cidr==None:
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
         print("An Expirimental/Reserved IPv4 address cannot be subnetted")
-#0. Fix all edge cases, try to optimize by reusing network and broadcast function for sub/supernet
 #1. Work on supernetting
 #2. Add exceptValueError parameters
 #3. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
