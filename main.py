@@ -22,7 +22,7 @@ def mask_calculator_class(x):
     elif x=="D":
         return None, None, None, "N/A (Multicast Address)"
     else:
-        return None, None, None, "N/A (Experimental/Reserved)"
+        return None, None, None, "N/A (Expirimental/Reserved)"
 
 
 # Calls a function that calculates the class through the first octade of the IPv4
@@ -152,7 +152,7 @@ def octade_binary(a1,b1,c1,d1):
 
 
 # calls a function that takes in 8 arguments (4 octades for mask, 4 for ip), converts them to binary, compares them, and returns the network address octades
-def network_address(a1,b1,c1,d1,a,b,c,d):
+def get_network_address(a1,b1,c1,d1,a,b,c,d):
     N1 = []
     N2 = []
     N3 = []
@@ -181,7 +181,7 @@ def network_address(a1,b1,c1,d1,a,b,c,d):
 
 
 # calls a function that takes in the mask and the network address of the IPv4 address to compare them and return the broadcast address octades
-def broadcast_address(a1,b1,c1,d1,ak,bk,ck,dk):
+def get_broadcast_address(a1,b1,c1,d1,ak,bk,ck,dk):
     a,b,c,d = ak[:],bk[:],ck[:],dk[:] # creates a fresh copy of the given lists
     for i in range(len(a1)):
         if a1[i]==0:
@@ -252,100 +252,12 @@ def subnet_mask(new_cidr):
     return first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade
 
 
-# calls a function that takes in 8 arguments (4 octades for mask, 4 for ip), converts them to binary, compares them, and returns the sub-network address octades
-def network_sub_address(s1,s2,s3,s4,a,b,c,d):
-    SN1 = []
-    SN2 = []
-    SN3 = []
-    SN4 = []
-    for i in range(8):
-        if s1[i]==1 and a[i]==1:
-            SN1.append(1)
-        else:
-            SN1.append(0)
-    for i in range(8):
-        if s2[i]==1 and b[i]==1:
-            SN2.append(1)
-        else:
-            SN2.append(0)
-    for i in range(8):
-        if s3[i]==1 and c[i]==1:
-            SN3.append(1)
-        else:
-            SN3.append(0)
-    for i in range(8):
-        if s4[i]==1 and d[i]==1:
-            SN4.append(1)
-        else:
-            SN4.append(0)
-    return SN1,SN2,SN3,SN4
-
-
-# calls a function that takes in the mask and the network address of the IPv4 address to compare them and return the sub-broadcast address octades
-def broadcast_sub_address(a1,b1,c1,d1,ak,bk,ck,dk):
-    a,b,c,d = ak[:],bk[:],ck[:],dk[:] # creates a fresh copy of the given lists
-    for i in range(len(a1)):
-        if a1[i]==0:
-            a[i]=1
-        if b1[i]==0:
-            b[i]=1
-        if c1[i]==0:
-            c[i]=1
-        if d1[i]==0:
-            d[i]=1
-    return a,b,c,d
-
-
 # ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
 
 # calls a function that simply takes the new cidr and uses the mask calculator from cidr to find the new mask
 def supernet_mask(new_cidr):
     first_supmask_octade,second_supmask_octade,third_supmask_octade,fourth_supmask_octade = mask_calculator_cidr(new_cidr)
     return first_supmask_octade,second_supmask_octade,third_supmask_octade,fourth_supmask_octade
-
-
-# calls a function that takes in 8 arguments (4 octades for mask, 4 for ip), converts them to binary, compares them, and returns the super-network address octades
-def network_super_address(s1,s2,s3,s4,a,b,c,d):
-    SN1 = []
-    SN2 = []
-    SN3 = []
-    SN4 = []
-    for i in range(8):
-        if s1[i]==1 and a[i]==1:
-            SN1.append(1)
-        else:
-            SN1.append(0)
-    for i in range(8):
-        if s2[i]==1 and b[i]==1:
-            SN2.append(1)
-        else:
-            SN2.append(0)
-    for i in range(8):
-        if s3[i]==1 and c[i]==1:
-            SN3.append(1)
-        else:
-            SN3.append(0)
-    for i in range(8):
-        if s4[i]==1 and d[i]==1:
-            SN4.append(1)
-        else:
-            SN4.append(0)
-    return SN1,SN2,SN3,SN4
-
-
-# calls a function that takes in the mask and the network address of the IPv4 address to compare them and return the super-broadcast address octades
-def broadcast_super_address(a1,b1,c1,d1,ak,bk,ck,dk):
-    a,b,c,d = ak[:],bk[:],ck[:],dk[:] # creates a fresh copy of the given lists
-    for i in range(len(a1)):
-        if a1[i]==0:
-            a[i]=1
-        if b1[i]==0:
-            b[i]=1
-        if c1[i]==0:
-            c[i]=1
-        if d1[i]==0:
-            d[i]=1
-    return a,b,c,d
 
 
 # ---------------------------------------------- MAIN PROGRAM ----------------------------------------------
@@ -443,14 +355,14 @@ if cidr!=None:
 
 # NETWORK/BROADCAST ADDRESS
 if cidr!=None:
-    net1,net2,net3,net4 = network_address(first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # compares binary mask and octade for network binary octades
+    net1,net2,net3,net4 = get_network_address(first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # compares binary mask and octade for network binary octades
     first_net_octade = bin_to_dec(net1) # returns them back to decimal
     second_net_octade = bin_to_dec(net2)
     third_net_octade = bin_to_dec(net3)
     fourth_net_octade = bin_to_dec(net4)
     network_address = (f"{first_net_octade}.{second_net_octade}.{third_net_octade}.{fourth_net_octade}")
     print(f"Network Address: {network_address}")
-    broad1,broad2,broad3,broad4 = broadcast_address(first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade,net1,net2,net3,net4) # compares mask and network binary for broadcast binary octades
+    broad1,broad2,broad3,broad4 = get_broadcast_address(first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade,net1,net2,net3,net4) # compares mask and network binary for broadcast binary octades
     first_broad_octade = bin_to_dec(broad1) # returns them back to decimal
     second_broad_octade = bin_to_dec(broad2)
     third_broad_octade = bin_to_dec(broad3)
@@ -486,16 +398,16 @@ while True:
 #SUBNET INPUTS/CALCULATIONS
 if cidr!=None and yz==1 and exception!=1:
     y = int(input("How many subnets would you like? "))
-    while y>2** or y<2:
+    while y>2**(32-cidr) or y<2:
         print(f"You can only have from {2} up to {2**(32-cidr)} subnets")
         y = int(input("How many subnets would you like? "))
     network_bits = bits_calculator(y) # given to Network ID
     equal_subnets = 2**network_bits
     print(f"Your equal subnets will be : {equal_subnets}")
     new_cidr = cidr+network_bits
-    if new_cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
+    if cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
-    elif new_cidr==32:
+    elif cidr==32:
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used in routing tables to identify specific hosts, since they only have 1 address in total.")
     first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = subnet_mask(new_cidr)
     print(f"New Subnet Mask: {first_submask_octade}.{second_submask_octade}.{third_submask_octade}.{fourth_submask_octade}")
@@ -506,14 +418,14 @@ if cidr!=None and yz==1 and exception!=1:
     else:
         print("No Usable Hosts")
     first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade = mask_binary(first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade) # turns the subnet mask octades to binary
-    subnet1,subnet2,subnet3,subnet4 = network_sub_address(first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the subnet mask octades (in binary from above) by comparing to the normal IPv4 octades in binary
+    subnet1,subnet2,subnet3,subnet4 = get_network_address(first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the subnet mask octades (in binary from above) by comparing to the normal IPv4 octades in binary
     first_subnet_octade = bin_to_dec(subnet1) # returns them back to decimal
     second_subnet_octade = bin_to_dec(subnet2)
     third_subnet_octade = bin_to_dec(subnet3)
     fourth_subnet_octade = bin_to_dec(subnet4)
     subnetwork_address = (f"{first_subnet_octade}.{second_subnet_octade}.{third_subnet_octade}.{fourth_subnet_octade}")
     print(f"Sub-Network Address: {subnetwork_address}")
-    subbroad1,subbroad2,subbroad3,subbroad4 =  broadcast_sub_address(first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade,subnet1,subnet2,subnet3,subnet4) # compares subnet mask and subnetwork octades for sub broadcast address
+    subbroad1,subbroad2,subbroad3,subbroad4 =  get_broadcast_address(first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade,subnet1,subnet2,subnet3,subnet4) # compares subnet mask and subnetwork octades for sub broadcast address
     first_subbroad_octade = bin_to_dec(subbroad1) # returns them back to decimal
     second_subbroad_octade = bin_to_dec(subbroad2)
     third_subbroad_octade = bin_to_dec(subbroad3)
@@ -540,7 +452,7 @@ elif cidr!=None and yz==0 and exception!=0:
     networks_used = 2**network_bits
     print(f"The amount of equal networks you will be using for supernetting will be: {networks_used}")
     new_cidr = cidr-network_bits
-    if new_cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
+    if cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
     first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade = supernet_mask(new_cidr)
     print(f"New Supernet Mask: {first_supermask_octade}.{second_supermask_octade}.{third_supermask_octade}.{fourth_supermask_octade}")
@@ -551,14 +463,14 @@ elif cidr!=None and yz==0 and exception!=0:
     else:
         print("No Usable Hosts")
     first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade = mask_binary(first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade) # turns the supernet mask octades to binary
-    supernet1,supernet2,supernet3,supernet4 = network_super_address(first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the supernet mask octades (in binary from above) by comparing to the normal IPv4 octades in binary
+    supernet1,supernet2,supernet3,supernet4 = get_network_address(first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the supernet mask octades (in binary from above) by comparing to the normal IPv4 octades in binary
     first_supernet_octade = bin_to_dec(supernet1) # returns them back to decimal
     second_supernet_octade = bin_to_dec(supernet2)
     third_supernet_octade = bin_to_dec(supernet3)
     fourth_supernet_octade = bin_to_dec(supernet4)
     supernetwork_address = (f"{first_supernet_octade}.{second_supernet_octade}.{third_supernet_octade}.{fourth_supernet_octade}")
     print(f"Super-Network Address: {supernetwork_address}")
-    superbroad1,superbroad2,superbroad3,superbroad4 =  broadcast_super_address(first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade,supernet1,supernet2,supernet3,supernet4) # compares supernet mask and super network octades for super broadcast address
+    superbroad1,superbroad2,superbroad3,superbroad4 =  get_broadcast_address(first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade,supernet1,supernet2,supernet3,supernet4) # compares supernet mask and super network octades for super broadcast address
     first_superbroad_octade = bin_to_dec(superbroad1) # returns them back to decimal
     second_superbroad_octade = bin_to_dec(superbroad2)
     third_superbroad_octade = bin_to_dec(superbroad3)
@@ -582,7 +494,8 @@ if cidr==None: # Check for cidr == None (happens with class D/E)
     if mask_class=="D":
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
-        print("An Experimental/Reserved IPv4 address cannot be subnetted")
+        print("An Expirimental/Reserved IPv4 address cannot be subnetted")
+#0. KEEP the sub-network range etc ASIDE the subnets TRUST ALL SIDES DO IT THIS WAY
 #1. Add exceptValueError parameters
 #2. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
 #3. Close this shit with the READme.md on github and check for error handling
