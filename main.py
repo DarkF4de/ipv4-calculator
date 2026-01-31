@@ -583,6 +583,3 @@ if cidr==None: # Check for cidr == None (happens with class D/E)
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
         print("An Experimental/Reserved IPv4 address cannot be subnetted")
-#1. Add exceptValueError parameters
-#2. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
-#3. Close this shit with the READme.md on github and check for error handling
