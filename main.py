@@ -486,7 +486,7 @@ while True:
 #SUBNET INPUTS/CALCULATIONS
 if cidr!=None and yz==1 and exception!=1:
     y = int(input("How many subnets would you like? "))
-    while y>2**(32-cidr) or y<2:
+    while y>2** or y<2:
         print(f"You can only have from {2} up to {2**(32-cidr)} subnets")
         y = int(input("How many subnets would you like? "))
     network_bits = bits_calculator(y) # given to Network ID
@@ -583,3 +583,6 @@ if cidr==None: # Check for cidr == None (happens with class D/E)
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
         print("An Experimental/Reserved IPv4 address cannot be subnetted")
+#1. Add exceptValueError parameters
+#2. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
+#3. Close this shit with the READme.md on github and check for error handling
