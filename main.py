@@ -492,7 +492,7 @@ elif cidr!=None and yz==-1:
 
 if cidr==None: # Check for cidr == None (happens with class D/E)
     if mask_class=="D":
-        print("A Mulitcast IPv4 address cannot be subnetted")
+        print("A Multicast IPv4 address cannot be subnetted")
     else:
         print("An Experimental/Reserved IPv4 address cannot be subnetted")
 #0. KEEP the sub-network range etc ASIDE the subnets TRUST ALL SIDES DO IT THIS WAY
