@@ -22,7 +22,7 @@ def mask_calculator_class(x):
     elif x=="D":
         return None, None, None, "N/A (Multicast Address)"
     else:
-        return None, None, None, "N/A (Expirimental/Reserved)"
+        return None, None, None, "N/A (Experimental/Reserved)"
 
 
 # Calls a function that calculates the class through the first octade of the IPv4
@@ -405,9 +405,9 @@ if cidr!=None and yz==1 and exception!=1:
     equal_subnets = 2**network_bits
     print(f"Your equal subnets will be : {equal_subnets}")
     new_cidr = cidr+network_bits
-    if cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
+    if new_cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
-    elif cidr==32:
+    elif new_cidr==32:
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used in routing tables to identify specific hosts, since they only have 1 address in total.")
     first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = subnet_mask(new_cidr)
     print(f"New Subnet Mask: {first_submask_octade}.{second_submask_octade}.{third_submask_octade}.{fourth_submask_octade}")
@@ -452,7 +452,7 @@ elif cidr!=None and yz==0 and exception!=0:
     networks_used = 2**network_bits
     print(f"The amount of equal networks you will be using for supernetting will be: {networks_used}")
     new_cidr = cidr-network_bits
-    if cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
+    if new_cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
     first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade = supernet_mask(new_cidr)
     print(f"New Supernet Mask: {first_supermask_octade}.{second_supermask_octade}.{third_supermask_octade}.{fourth_supermask_octade}")
@@ -494,7 +494,7 @@ if cidr==None: # Check for cidr == None (happens with class D/E)
     if mask_class=="D":
         print("A Mulitcast IPv4 address cannot be subnetted")
     else:
-        print("An Expirimental/Reserved IPv4 address cannot be subnetted")
+        print("An Experimental/Reserved IPv4 address cannot be subnetted")
 #0. KEEP the sub-network range etc ASIDE the subnets TRUST ALL SIDES DO IT THIS WAY
 #1. Add exceptValueError parameters
 #2. figure out a DECENT way to finish all this shit by adding network/broadcast address for each SUBnet, then the usuable range
