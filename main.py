@@ -262,36 +262,61 @@ def subnets(n1,n2,n3,n4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnets):
             d = abs(bs4-n4)
             network1 = 0
             broadcast1 = d
-            print(f"{1}: Network: {n1,n2,n3,n4} Broadcast: {n1,n2,n3,bs4}")
+            print(f"{1}: Network: {n1,n2,n3,n4} Broadcast: {bs1,bs2,bs3,bs4}")
             for i in range(equal_subnets-1):
                 counter = i+2
                 network1 = network1 + (d + 1)
                 broadcast1 = broadcast1 + (d+1)
                 print(f"{counter}: Network: {n1,n2,n3,network1} Broadcast: {bs1,bs2,bs3,broadcast1}")
         elif n1==bs1 and n2==bs2:
-            times1 = abs(bs3-n3)
             d = abs(bs4-n4)
             network1 = 0
             broadcast1 = d
-            print(f"{1}: Network: {n1,n2,n3,n4} Broadcast: {bs1,bs2,bs3,bs4}")
-            for j in range(times1):
-                for i in range(equal_subnets-1):
-                    counter = i+2
-                    network1 = network1 + (d + 1)
-                    broadcast1 = broadcast1 + (d+1)
-                    print(f"{counter}: Network: {n1,n2,n3,network1} Broadcast: {bs1,bs2,bs3,broadcast1}")
-
-
-
-
-
-
-
-
-
-
-
-
+            print(f"{1}: Network: {n1,n2,n3,n4} Broadcast: {n1,n2,n3,bs4}")
+            mn3 = n3
+            mbs3 = n3
+            for i in range(equal_subnets-1):
+                if broadcast1==255:
+                    mn3 = mn3+1
+                    mbs3 = mbs3 + 1
+                    network1 = 0 - (d+1)
+                    broadcast1 = -1
+                counter = i+2
+                network1 = network1 + (d + 1)
+                broadcast1 = broadcast1 + (d+1)
+                print(f"{counter}: Network: {n1,n2,mn3,network1} Broadcast: {bs1,bs2,mbs3,broadcast1}")
+        elif n1==bs1:
+            d = abs(bs4-n4)//2 +1
+            network1 = 0
+            broadcast1 = d
+            print(f"{1}: Network: {n1,n2,n3,n4} Broadcast: {n1,n2,d,bs4}")
+            mn3 = n3
+            mbs3 = n3
+            mn2 = n2
+            mbs2 = n2
+            for i in range(equal_subnets-1):
+                if mbs3==255:
+                    mn2 = mn2+1
+                    mbs2 = mbs2+1
+                if broadcast1==255:
+                    mn3 = mn3+d
+                    mbs3 = mbs3 + d
+                    network1 = 0 - (d+1)
+                    broadcast1 = -1
+                counter = i+2
+                network1 = network1 + (d + 1)
+                broadcast1 = broadcast1 + (d+1)
+                print(f"{counter}: Network: {n1,mn2,mn3,network1} Broadcast: {bs1,mbs2,mbs3,broadcast1}")
+        else:
+            d = abs(bs4-n4)
+            network1 = 0
+            broadcast1 = d
+            print(f"{1}: Network: {n1,n2,n3,n4} Broadcast: {n1,bs2,bs3,bs4}")
+            for i in range(equal_subnets-1):
+                counter = i+2
+                network1 = network1 + (d + 1)
+                broadcast1 = broadcast1 + (d+1)
+                print(f"{counter}: Network: {n1,n2,n3,network1} Broadcast: {bs1,bs2,bs3,broadcast1}")
 
 
 # ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
