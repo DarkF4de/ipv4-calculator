@@ -133,16 +133,16 @@ def bin_to_dec(L):
     return number
 
 
-# calls a function that uses python's built in functions to convert a binary number integer to decimal
-def bin_to_decx(x):
+# calls a function that uses python's built in functions to convert a decimal integer to a binary integer
+def dec_to_binx(x):
     binx = bin(x)
     binx = binx[2:]
     return binx
 
 
 
-# calls a function that uses python's built in functions to convert a decimal number to binary
-def dec_to_binx(x):
+# calls a function that uses python's built in functions to convert a binary integer to a decimal integer
+def bin_to_decx(x):
     x = str(x)
     decx = int(x,2)
     return decx
@@ -308,10 +308,8 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
         binteger = dec_to_binx(dinteger) # back to integer binary
         b1,b2,b3,b4 = quick_converter(binteger) # 4 octades
         b1,b2,b3,b4 = decimal_converter(b1,b2,b3,b4) # 4 decimal numbers
-        print(n1,n2,n3,n4)
-        print(b1,b2,b3,b4)
         counter = 1
-        # (f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
+        print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
         for i in range(equal_subnets):
             counter = counter+1
 
