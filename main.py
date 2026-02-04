@@ -133,6 +133,21 @@ def bin_to_dec(L):
     return number
 
 
+# calls a function that uses python's built in functions to convert a binary number integer to decimal
+def bin_to_decx(x):
+    binx = bin(x)
+    binx = binx[2:]
+    return binx
+
+
+
+# calls a function that uses python's built in functions to convert a decimal number to binary
+def dec_to_binx(x):
+    x = str(x)
+    decx = int(x,2)
+    return decx
+
+
 # calls a function that returns the mask octades in binary so it can be compared with the IPv4 address later on for the broadcast address
 def mask_binary(a1,b1,c1,d1):
     first_mask_octade = dec_to_bin(a1)
@@ -286,17 +301,19 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
         for i in range(len(nall)):
             string = string+str(nall[i]) # adds them into a string
         binteger = int(string) # makes it an integer binary
-        # gotta make a way to have a standard decimal
         n1,n2,n3,n4 = quick_converter(binteger) # converts it into 4 octades
         n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4) # converts them into 4 decimal numbers
-        # and another solid way to convert it immediately to binary integer
+        dinteger = bin_to_decx(binteger) # converts it into a integer decimal
+        dinteger = dinteger+block # adds the block for broadcast
+        binteger = dec_to_binx(dinteger) # back to integer binary
+        b1,b2,b3,b4 = quick_converter(binteger) # 4 octades
+        b1,b2,b3,b4 = decimal_converter(b1,b2,b3,b4) # 4 decimal numbers
         print(n1,n2,n3,n4)
+        print(b1,b2,b3,b4)
         counter = 1
-        # (f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {n1}.{n2}.{n3}.{n4}")
+        # (f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
         for i in range(equal_subnets):
             counter = counter+1
-            network = 1+block
-            broadcast = network+(block-1)
 
 
 
