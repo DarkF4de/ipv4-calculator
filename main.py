@@ -252,18 +252,28 @@ def subnet_mask(new_cidr):
     return first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade
 
 
+# calls a function that converts an integer into 4 octades of it
+def quick_converter(integer):
+    string = str(integer)
+    L = []
+    for i in range(len(string)):
+        L.append(int(string[i]))
+    n1 = L[0:8]
+    n2 = L[8:16]
+    n3 = L[16:24]
+    n4 = L[24:32]
+    return n1,n2,n3,n4
 
-def quick_converter(x):
-    net_list = [[],[],[],[]]
-    stopper = 0
-    for i in range(4):
-        stopper = stopper + 8
-        for j in range(len(x),stopper):
-            net_list[i].append(x[j])
-    print(net_list[0])
 
-integer = [12345678123456781234567812345678]
-print(quick_converter(integer))
+# calls a function that quickly converts those 4 integer octades into binary
+def decimal_converter(n1,n2,n3,n4):
+    n1 = bin_to_dec(n1)
+    n2 = bin_to_dec(n2)
+    n3 = bin_to_dec(n3)
+    n4 = bin_to_dec(n4)
+    return n1,n2,n3,n4
+
+
 # God help me
 def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnets,new_cidr):
     print(f"------------------------- {equal_subnets} SUBNETS -------------------------")
@@ -272,16 +282,21 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
     else:
         block = 2**(32-new_cidr)
         string = ""
-        nall = n1+n2+n3+n4
+        nall = n1+n2+n3+n4 # combines all network binary octades into 1
         for i in range(len(nall)):
-            string = string+str(nall[i])
-        integer = int(string)
+            string = string+str(nall[i]) # adds them into a string
+        binteger = int(string) # makes it an integer binary
+        # gotta make a way to have a standard decimal
+        n1,n2,n3,n4 = quick_converter(binteger) # converts it into 4 octades
+        n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4) # converts them into 4 decimal numbers
+        # and another solid way to convert it immediately to binary integer
+        print(n1,n2,n3,n4)
         counter = 1
-        # print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {n1}.{n2}.{n3}.{integer}
-        # for i in range(equal_subnets):
-            # counter = counter+1
-            # network = integer+block
-            # broadcast = network+(block-1)
+        # (f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {n1}.{n2}.{n3}.{n4}")
+        for i in range(equal_subnets):
+            counter = counter+1
+            network = 1+block
+            broadcast = network+(block-1)
 
 
 
