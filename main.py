@@ -252,6 +252,18 @@ def subnet_mask(new_cidr):
     return first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade
 
 
+
+def quick_converter(x):
+    net_list = [[],[],[],[]]
+    stopper = 0
+    for i in range(4):
+        stopper = stopper + 8
+        for j in range(len(x),stopper):
+            net_list[i].append(x[j])
+    print(net_list[0])
+
+integer = [12345678123456781234567812345678]
+print(quick_converter(integer))
 # God help me
 def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnets,new_cidr):
     print(f"------------------------- {equal_subnets} SUBNETS -------------------------")
@@ -259,22 +271,19 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
         print("Error: Cannot subnet because of /32 CIDR [There are practically no Usable Hosts]")
     else:
         block = 2**(32-new_cidr)
-        if new_cidr>=24 and new_cidr<=31:
-            d4 = block-1
-            print(f"{1}: Network: {n1,n2,n3,n4} Broadcast: {bs1,bs2,bs3,d4}")
-            for i in range(equal_subnets-1):
-                counter = i+2
-                n4 = n4 + block
-                bs4 = bs4 + block
-                print(f"{counter}: Network: {n1,n2,n3,n4} Broadcast: {bs1,bs2,bs3,bs4}")
-            print(1)
-        elif new_cidr>=16 and new_cidr<24:
-            d3 = block//65536
-            print(2)
-        elif new_cidr>=8:
-            print(3)
-        else:
-            print(4)
+        string = ""
+        nall = n1+n2+n3+n4
+        for i in range(len(nall)):
+            string = string+str(nall[i])
+        integer = int(string)
+        counter = 1
+        # print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {n1}.{n2}.{n3}.{integer}
+        # for i in range(equal_subnets):
+            # counter = counter+1
+            # network = integer+block
+            # broadcast = network+(block-1)
+
+
 
 
 # ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
@@ -462,7 +471,7 @@ if cidr!=None and yz==1 and exception!=1:
         print("No Network Range")
     else:
         print(f"Usable Sub-Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
-    subnets(first_net_octade,second_net_octade,third_net_octade,fourth_net_octade,first_broad_octade,second_broad_octade,third_broad_octade,fourth_broad_octade,first_subnet_octade,second_subnet_octade,third_subnet_octade,fourth_subnet_octade,first_subbroad_octade,second_subbroad_octade,third_subbroad_octade,fourth_subbroad_octade,equal_subnets,new_cidr)
+    subnets(net1,net2,net3,net4,first_broad_octade,second_broad_octade,third_broad_octade,fourth_broad_octade,first_subnet_octade,second_subnet_octade,third_subnet_octade,fourth_subnet_octade,first_subbroad_octade,second_subbroad_octade,third_subbroad_octade,fourth_subbroad_octade,equal_subnets,new_cidr)
 elif cidr!=None and yz==1 and exception==1: # Checks if CIDR is /32 therefore can't be subnetted
     print(f"Cannot be subnetted further since it has only one network. (/{cidr} CIDR)")
 
