@@ -316,15 +316,15 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
         block = 2**(32-new_cidr)
         string = ""
         nall = n1+n2+n3+n4 # combines all network binary octades into 1
-        dall = bin_to_dec(nall) # converts to decimal
+        dall = bin_to_dec(nall) # converts to decimal integer
         ball = dall + block-1 # broadcast
-        L = dec_to_binx(dall)
+        L = dec_to_bin(dall)
         n1,n2,n3,n4 = converter(L)
-        n1,n2,n3,n4 = decimal_converterx(n1,n2,n3,n4)
+        n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4)
         print(n1,n2,n3,n4)
-        L1 = dec_to_binx(ball)
+        L1 = dec_to_bin(ball)
         n1,n2,n3,n4 = converter(L1)
-        n1,n2,n3,n4 = decimal_converterx(n1,n2,n3,n4)
+        n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4)
         print(n1,n2,n3,n4)
 
         # n1,n2,n3,n4
