@@ -280,6 +280,15 @@ def quick_converter(integer):
     return n1,n2,n3,n4
 
 
+
+def converter(L):
+    n1 = L[0:8]
+    n2 = L[8:16]
+    n3 = L[16:24]
+    n4 = L[24:32]
+    return n1,n2,n3,n4
+
+
 # calls a function that quickly converts those 4 integer octades into binary
 def decimal_converter(n1,n2,n3,n4):
     n1 = bin_to_dec(n1)
@@ -288,6 +297,15 @@ def decimal_converter(n1,n2,n3,n4):
     n4 = bin_to_dec(n4)
     return n1,n2,n3,n4
 
+
+
+
+def decimal_converterx(n1,n2,n3,n4):
+    n1 = bin_to_decx(n1)
+    n2 = bin_to_decx(n2)
+    n3 = bin_to_decx(n3)
+    n4 = bin_to_decx(n4)
+    return n1,n2,n3,n4
 
 # God help me
 def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnets,new_cidr):
@@ -298,20 +316,29 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
         block = 2**(32-new_cidr)
         string = ""
         nall = n1+n2+n3+n4 # combines all network binary octades into 1
-        for i in range(len(nall)):
-            string = string+str(nall[i]) # adds them into a string
-        binteger = int(string) # makes it an integer binary
-        n1,n2,n3,n4 = quick_converter(binteger) # converts it into 4 octades
-        n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4) # converts them into 4 decimal numbers
-        dinteger = bin_to_decx(binteger) # converts it into a integer decimal
-        dinteger = dinteger+block # adds the block for broadcast
-        binteger = dec_to_binx(dinteger) # back to integer binary
-        b1,b2,b3,b4 = quick_converter(binteger) # 4 octades
-        b1,b2,b3,b4 = decimal_converter(b1,b2,b3,b4) # 4 decimal numbers
-        counter = 1
-        print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
-        for i in range(equal_subnets):
-            counter = counter+1
+        dall = bin_to_dec(nall) # converts to decimal
+        ball = dall + block-1 # broadcast
+        L = dec_to_binx(dall)
+        n1,n2,n3,n4 = converter(L)
+        n1,n2,n3,n4 = decimal_converterx(n1,n2,n3,n4)
+        print(n1,n2,n3,n4)
+        L1 = dec_to_binx(ball)
+        n1,n2,n3,n4 = converter(L1)
+        n1,n2,n3,n4 = decimal_converterx(n1,n2,n3,n4)
+        print(n1,n2,n3,n4)
+
+        # n1,n2,n3,n4
+        # # n1,n2,n3,n4 = quick_converter(binteger) # converts it into 4 octades
+        # n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4) # converts them into 4 decimal numbers
+        # dinteger = bin_to_decx(binteger) # converts it into a integer decimal
+        # dinteger = dinteger+(block-1) # adds the block for broadcast
+        # binteger = dec_to_binx(dinteger) # back to integer binary
+        # b1,b2,b3,b4 = quick_converter(binteger) # 4 octades
+        # b1,b2,b3,b4 = decimal_converter(b1,b2,b3,b4) # 4 decimal numbers
+        # counter = 1
+        # print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
+        # for i in range(equal_subnets):
+            # counter = counter+1
 
 
 
