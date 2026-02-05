@@ -122,21 +122,6 @@ def dec_to_bin(x):
         Ln.insert(0,0) # makes sure list is always at least 8 digits to use for comparison
     return Ln
 
-# calls a function that converts a decimal number to a binary number in a stored list
-def dec_to_binx(x):
-    L=[]
-    if x!=0:
-        while x!=0:
-            a = x%2
-            L.append(a)
-            x = x//2
-    else:
-        for i in range(8):
-            L.append(0)
-    Ln = L[::-1]
-    while len(Ln)<32:
-        Ln.insert(0,0) # makes sure list is always at least 8 digits to use for comparison
-    return Ln
 
 # calls a function that converts a binary number in a sequence from a list, to a decimal number
 def bin_to_dec(L):
@@ -266,34 +251,29 @@ def subnet_mask(new_cidr):
     first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = mask_calculator_cidr(new_cidr)
     return first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade
 
-# calls a function that takes in an integer (binary) and returns 4 integer octades (binary)
+
+# calls a function that converts a decimal number to a binary number in a stored list (32 digits check to use in subnets function)
+def dec_to_binx(x):
+    L=[]
+    if x!=0:
+        while x!=0:
+            a = x%2
+            L.append(a)
+            x = x//2
+    else:
+        for i in range(8):
+            L.append(0)
+    Ln = L[::-1]
+    while len(Ln)<32:
+        Ln.insert(0,0) # makes sure list is always at least 32 digits to use for comparison
+    return Ln
+
+# calls a function that takes in a binary list, converts it into 4 lists (left to right, msb to lsb) then converts them to 4 integer decimal octades
 def converter(L):
     n1 = L[0:8]
     n2 = L[8:16]
     n3 = L[16:24]
     n4 = L[24:32]
-    return n1,n2,n3,n4
-
-
-
-# calls a function that takes in a binary list, converts it into 4 lists (left to right, msb to lsb) then returns them as decimals
-def special(L):
-    n1 = L[0:8]
-    n2 = L[8:16]
-    n3 = L[16:24]
-    n4 = L[24:32]
-    return n1,n2,n3,n4
-
-
-# calls a function that takes in 4 binary lists then converts them to 4 integer decimal octades
-def saridaki(a,b,c,d):
-    n1 = bin_to_dec(a)
-    n2 = bin_to_dec(b)
-    n3 = bin_to_dec(c)
-    n4 = bin_to_dec(d)
-    return n1,n2,n3,n4
-# calls a function that quickly converts those 4 integer octades into binary
-def decimal_converter(n1,n2,n3,n4):
     n1 = bin_to_dec(n1)
     n2 = bin_to_dec(n2)
     n3 = bin_to_dec(n3)
@@ -311,16 +291,25 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
         net_list = n1+n2+n3+n4 # makes a list of all binary octades
         print(net_list)
         dnet = bin_to_dec(net_list) # converts into decimals
+        dnetx = dec_to_binx(dnet) # converts it into a 32 bit binary list
+        n1,n2,n3,n4 = converter(dnetx) # splits the 32 bit binary list into 4 then returns them as decimals
         print(dnet)
         dbroad = dnet + block-1 # add block to make integer decimal of broadcast
         print(dbroad)
-        dbroad = dec_to_binx(dbroad) # returns it in a 32 binary list
+        dbroadx = dec_to_binx(dbroad) # converts it into a 32 bit binary list
+        b1,b2,b3,b4 = converter(dbroadx) # splits the 32 bit binary list into 4 then returns them as decimals
         print(dbroad)
-        n1,n2,n3,n4 = special(dbroad)
-        print(n1,n2,n3,n4)
-        n1,n2,n3,n4 = saridaki(n1,n2,n3,n4)
-        print(n1,n2,n3,n4)
-
+        print(b1,b2,b3,b4)
+        print(f"{1}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
+        for i in range(equal_subnets-1):
+            counter = i+2
+            dnet = dnet + block
+            dnetx = dec_to_binx(dnet)
+            n1,n2,n3,n4 = converter(dnetx)
+            dbroad = dbroad+ block
+            dbroadx = dec_to_binx(dbroad)
+            b1,b2,b3,b4 = converter(dbroadx)
+            print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
 
 
 # ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
@@ -567,6 +556,3 @@ if cidr==None: # Check for cidr == None (happens with class D/E)
         print("A Multicast IPv4 address cannot be subnetted")
     else:
         print("An Experimental/Reserved IPv4 address cannot be subnetted")
-#0. fix the subnetting logic
-#1. Add exceptValueError parameters
-#3. Close this shit with the READme.md on github and check for error handling
