@@ -122,6 +122,21 @@ def dec_to_bin(x):
         Ln.insert(0,0) # makes sure list is always at least 8 digits to use for comparison
     return Ln
 
+# calls a function that converts a decimal number to a binary number in a stored list
+def dec_to_binx(x):
+    L=[]
+    if x!=0:
+        while x!=0:
+            a = x%2
+            L.append(a)
+            x = x//2
+    else:
+        for i in range(8):
+            L.append(0)
+    Ln = L[::-1]
+    while len(Ln)<32:
+        Ln.insert(0,0) # makes sure list is always at least 8 digits to use for comparison
+    return Ln
 
 # calls a function that converts a binary number in a sequence from a list, to a decimal number
 def bin_to_dec(L):
@@ -299,7 +314,7 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
         print(dnet)
         dbroad = dnet + block-1 # add block to make integer decimal of broadcast
         print(dbroad)
-        dbroad = dec_to_bin(dbroad) # returns it in a 32 binary list
+        dbroad = dec_to_binx(dbroad) # returns it in a 32 binary list
         print(dbroad)
         n1,n2,n3,n4 = special(dbroad)
         print(n1,n2,n3,n4)
