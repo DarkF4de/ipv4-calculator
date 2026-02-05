@@ -268,6 +268,7 @@ def dec_to_binx(x):
         Ln.insert(0,0) # makes sure list is always at least 32 digits to use for comparison
     return Ln
 
+
 # calls a function that takes in a binary list, converts it into 4 lists (left to right, msb to lsb) then converts them to 4 integer decimal octades
 def converter(L):
     n1 = L[0:8]
@@ -281,35 +282,30 @@ def converter(L):
     return n1,n2,n3,n4
 
 
-# God help me
-def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnets,new_cidr):
-    print(f"------------------------- {equal_subnets} SUBNETS -------------------------")
+# calls a function that calculates each subnet from the original CIDR Network Address up to the original CIDR Broadcast Address
+def subnets(n1,n2,n3,n4,equal_subnets,new_cidr):
+    print(f"-----------------------------= {equal_subnets} SUBNETS =-----------------------------")
     if new_cidr==32:
         print("Error: Cannot subnet because of /32 CIDR [There are practically no Usable Hosts]")
     else:
         block = 2**(32-new_cidr)
         net_list = n1+n2+n3+n4 # makes a list of all binary octades
-        print(net_list)
         dnet = bin_to_dec(net_list) # converts into decimals
         dnetx = dec_to_binx(dnet) # converts it into a 32 bit binary list
         n1,n2,n3,n4 = converter(dnetx) # splits the 32 bit binary list into 4 then returns them as decimals
-        print(dnet)
         dbroad = dnet + block-1 # add block to make integer decimal of broadcast
-        print(dbroad)
         dbroadx = dec_to_binx(dbroad) # converts it into a 32 bit binary list
         b1,b2,b3,b4 = converter(dbroadx) # splits the 32 bit binary list into 4 then returns them as decimals
-        print(dbroad)
-        print(b1,b2,b3,b4)
-        print(f"{1}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
+        print(f"{1}: Network Address: {n1}.{n2}.{n3}.{n4}  Broadcast Address: {b1}.{b2}.{b3}.{b4}")
         for i in range(equal_subnets-1):
             counter = i+2
-            dnet = dnet + block
-            dnetx = dec_to_binx(dnet)
-            n1,n2,n3,n4 = converter(dnetx)
-            dbroad = dbroad+ block
-            dbroadx = dec_to_binx(dbroad)
-            b1,b2,b3,b4 = converter(dbroadx)
-            print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
+            dnet = dnet + block # next network address will always be previous + block
+            dnetx = dec_to_binx(dnet) # converts it into a 32 bit binary list
+            n1,n2,n3,n4 = converter(dnetx) # splits the 32 bit binary list into 4 then returns them as decimals
+            dbroad = dbroad+ block # next broadcast address will always be previous (block-1) + block
+            dbroadx = dec_to_binx(dbroad) # converts it into a 32 bit binary list
+            b1,b2,b3,b4 = converter(dbroadx) # splits the 32 bit binary list into 4 then returns them as decimals
+            print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4}  Broadcast Address: {b1}.{b2}.{b3}.{b4}")
 
 
 # ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
@@ -323,30 +319,30 @@ def supernet_mask(new_cidr):
 # ---------------------------------------------- MAIN PROGRAM ----------------------------------------------
 
 # IPV4 ADD-UP
-print("SIMPLE IPV4 CALCULATOR")
+print("IPV4 CALCULATOR")
 while True:
-    x = int(input("Enter the first octade of bytes in your IP address: "))
+    x = int(input("Enter the first octade of bytes in your IP address [0-255]: "))
     first_octade = address_maker(x)
     if first_octade == -1:
         continue
     else:
         break
 while True:
-    x = int(input("Enter the second octade of bytes in your IP address: "))
+    x = int(input("Enter the second octade of bytes in your IP address [0-255]: "))
     second_octade = address_maker(x)
     if second_octade == -1:
         continue
     else:
         break
 while True:
-    x = int(input("Enter the third octade of bytes in your IP address: "))
+    x = int(input("Enter the third octade of bytes in your IP address [0-255]: "))
     third_octade = address_maker(x)
     if third_octade == -1:
         continue
     else:
         break
 while True:
-    x = int(input("Enter the fourth octade of bytes in your IP address: "))
+    x = int(input("Enter the fourth octade of bytes in your IP address [0-255]: "))
     fourth_octade = address_maker(x)
     if fourth_octade == -1:
         continue
@@ -369,7 +365,7 @@ while True:
         usable_hosts = find_usable_hosts(cidr)
         break
     elif ip_choice in ("classless","less"):
-        cidr = int(input("What is your CIDR? "))
+        cidr = int(input("What is your CIDR? [0-32]: "))
         while cidr<0 or cidr >32:
             print("A valid CIDR must be between 0-32")
             cidr = int(input("What is your CIDR? "))
@@ -497,7 +493,7 @@ if cidr!=None and yz==1 and exception!=1:
         print("No Network Range")
     else:
         print(f"Usable Sub-Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
-    subnets(net1,net2,net3,net4,first_broad_octade,second_broad_octade,third_broad_octade,fourth_broad_octade,first_subnet_octade,second_subnet_octade,third_subnet_octade,fourth_subnet_octade,first_subbroad_octade,second_subbroad_octade,third_subbroad_octade,fourth_subbroad_octade,equal_subnets,new_cidr)
+    subnets(net1,net2,net3,net4,equal_subnets,new_cidr)
 elif cidr!=None and yz==1 and exception==1: # Checks if CIDR is /32 therefore can't be subnetted
     print(f"Cannot be subnetted further since it has only one network. (/{cidr} CIDR)")
 
