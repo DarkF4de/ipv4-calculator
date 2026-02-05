@@ -133,21 +133,6 @@ def bin_to_dec(L):
     return number
 
 
-# calls a function that uses python's built in functions to convert a decimal integer to a binary integer
-def dec_to_binx(x):
-    binx = bin(x)
-    binx = binx[2:]
-    return binx
-
-
-
-# calls a function that uses python's built in functions to convert a binary integer to a decimal integer
-def bin_to_decx(x):
-    x = str(x)
-    decx = int(x,2)
-    return decx
-
-
 # calls a function that returns the mask octades in binary so it can be compared with the IPv4 address later on for the broadcast address
 def mask_binary(a1,b1,c1,d1):
     first_mask_octade = dec_to_bin(a1)
@@ -266,21 +251,7 @@ def subnet_mask(new_cidr):
     first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = mask_calculator_cidr(new_cidr)
     return first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade
 
-
-# calls a function that converts an integer into 4 octades of it
-def quick_converter(integer):
-    string = str(integer)
-    L = []
-    for i in range(len(string)):
-        L.append(int(string[i]))
-    n1 = L[0:8]
-    n2 = L[8:16]
-    n3 = L[16:24]
-    n4 = L[24:32]
-    return n1,n2,n3,n4
-
-
-
+# calls a function that takes in an integer (binary) and returns 4 integer octades (binary)
 def converter(L):
     n1 = L[0:8]
     n2 = L[8:16]
@@ -289,6 +260,23 @@ def converter(L):
     return n1,n2,n3,n4
 
 
+
+# calls a function that takes in a binary list, converts it into 4 lists (left to right, msb to lsb) then returns them as decimals
+def special(L):
+    n1 = L[0:8]
+    n2 = L[8:16]
+    n3 = L[16:24]
+    n4 = L[24:32]
+    return n1,n2,n3,n4
+
+
+# calls a function that takes in 4 binary lists then converts them to 4 integer decimal octades
+def saridaki(a,b,c,d):
+    n1 = bin_to_dec(a)
+    n2 = bin_to_dec(b)
+    n3 = bin_to_dec(c)
+    n4 = bin_to_dec(d)
+    return n1,n2,n3,n4
 # calls a function that quickly converts those 4 integer octades into binary
 def decimal_converter(n1,n2,n3,n4):
     n1 = bin_to_dec(n1)
@@ -298,15 +286,6 @@ def decimal_converter(n1,n2,n3,n4):
     return n1,n2,n3,n4
 
 
-
-
-def decimal_converterx(n1,n2,n3,n4):
-    n1 = bin_to_decx(n1)
-    n2 = bin_to_decx(n2)
-    n3 = bin_to_decx(n3)
-    n4 = bin_to_decx(n4)
-    return n1,n2,n3,n4
-
 # God help me
 def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnets,new_cidr):
     print(f"------------------------- {equal_subnets} SUBNETS -------------------------")
@@ -314,32 +293,18 @@ def subnets(n1,n2,n3,n4,b1,b2,b3,b4,ns1,ns2,ns3,ns4,bs1,bs2,bs3,bs4,equal_subnet
         print("Error: Cannot subnet because of /32 CIDR [There are practically no Usable Hosts]")
     else:
         block = 2**(32-new_cidr)
-        string = ""
-        nall = n1+n2+n3+n4 # combines all network binary octades into 1
-        dall = bin_to_dec(nall) # converts to decimal integer
-        ball = dall + block-1 # broadcast
-        L = dec_to_bin(dall)
-        n1,n2,n3,n4 = converter(L)
-        n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4)
+        net_list = n1+n2+n3+n4 # makes a list of all binary octades
+        print(net_list)
+        dnet = bin_to_dec(net_list) # converts into decimals
+        print(dnet)
+        dbroad = dnet + block-1 # add block to make integer decimal of broadcast
+        print(dbroad)
+        dbroad = dec_to_bin(dbroad) # returns it in a 32 binary list
+        print(dbroad)
+        n1,n2,n3,n4 = special(dbroad)
         print(n1,n2,n3,n4)
-        L1 = dec_to_bin(ball)
-        n1,n2,n3,n4 = converter(L1)
-        n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4)
+        n1,n2,n3,n4 = saridaki(n1,n2,n3,n4)
         print(n1,n2,n3,n4)
-
-        # n1,n2,n3,n4
-        # # n1,n2,n3,n4 = quick_converter(binteger) # converts it into 4 octades
-        # n1,n2,n3,n4 = decimal_converter(n1,n2,n3,n4) # converts them into 4 decimal numbers
-        # dinteger = bin_to_decx(binteger) # converts it into a integer decimal
-        # dinteger = dinteger+(block-1) # adds the block for broadcast
-        # binteger = dec_to_binx(dinteger) # back to integer binary
-        # b1,b2,b3,b4 = quick_converter(binteger) # 4 octades
-        # b1,b2,b3,b4 = decimal_converter(b1,b2,b3,b4) # 4 decimal numbers
-        # counter = 1
-        # print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4} Broadcast Address: {b1}.{b2}.{b3}.{b4}")
-        # for i in range(equal_subnets):
-            # counter = counter+1
-
 
 
 
