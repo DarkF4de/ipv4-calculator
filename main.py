@@ -321,29 +321,45 @@ def supernet_mask(new_cidr):
 # IPV4 ADD-UP
 print("IPV4 CALCULATOR")
 while True:
-    x = int(input("Enter the first octade of bytes in your IP address [0-255]: "))
-    first_octade = address_maker(x)
+    try:
+        x = int(input("Enter the first octade of bytes in your IP address [0-255]: "))
+        first_octade = address_maker(x)
+    except ValueError:
+        print("Please try to enter a valid integer between 0-255")
+        continue
     if first_octade == -1:
         continue
     else:
         break
 while True:
-    x = int(input("Enter the second octade of bytes in your IP address [0-255]: "))
-    second_octade = address_maker(x)
+    try:
+        x = int(input("Enter the second octade of bytes in your IP address [0-255]: "))
+        second_octade = address_maker(x)
+    except ValueError:
+        print("Please try to enter a valid integer between 0-255")
+        continue
     if second_octade == -1:
         continue
     else:
         break
 while True:
-    x = int(input("Enter the third octade of bytes in your IP address [0-255]: "))
-    third_octade = address_maker(x)
+    try:
+        x = int(input("Enter the third octade of bytes in your IP address [0-255]: "))
+        third_octade = address_maker(x)
+    except ValueError:
+        print("Please try to enter a valid integer between 0-255")
+        continue
     if third_octade == -1:
         continue
     else:
         break
 while True:
-    x = int(input("Enter the fourth octade of bytes in your IP address [0-255]: "))
-    fourth_octade = address_maker(x)
+    try:
+        x = int(input("Enter the fourth octade of bytes in your IP address [0-255]: "))
+        fourth_octade = address_maker(x)
+    except ValueError:
+        print("Please try to enter a valid integer between 0-255")
+        continue
     if fourth_octade == -1:
         continue
     else:
@@ -365,10 +381,17 @@ while True:
         usable_hosts = find_usable_hosts(cidr)
         break
     elif ip_choice in ("classless","less"):
-        cidr = int(input("What is your CIDR? [0-32]: "))
-        while cidr<0 or cidr >32:
-            print("A valid CIDR must be between 0-32")
-            cidr = int(input("What is your CIDR? "))
+        while True:
+            try:
+                cidr = int(input("What is your CIDR? [0-32]: "))
+                if cidr<0 or cidr >32:
+                    print("A valid CIDR must be between 0-32")
+                    continue
+            except ValueError:
+                print("Please try to enter a valid integer between 0-32")
+                continue
+            else:
+                break
         if cidr==31:
             print(f"Note: IPv4 addresses with a /{cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
         elif cidr==32:
@@ -435,7 +458,7 @@ if cidr!=None:
 
 #USER INPUT FOR SUBNET/SUPERNET/NOTHING
 while True:
-    z=str(input("Would you like to subnet this IPv4 address, supernet it or do nothing? [subnet/supernet/nothing]: ")).strip().lower()
+    z=str(input("Would you like to Subnet this IPv4 address, Supernet it or do nothing? [subnet/supernet/nothing]: ")).strip().lower()
     if z in ("subnet","sub"):
         yz = 1
         break
@@ -453,10 +476,17 @@ while True:
 
 #SUBNET INPUTS/CALCULATIONS
 if cidr!=None and yz==1 and exception!=1:
-    y = int(input("How many subnets would you like? "))
-    while y>2**(32-cidr) or y<2:
-        print(f"You can only have from {2} up to {2**(32-cidr)} subnets")
-        y = int(input("How many subnets would you like? "))
+    while True:
+        try:
+            y = int(input(f"How many subnets would you like? [{2}-{2**(32-cidr)}]: "))
+            if y>2**(32-cidr) or y<2:
+                print(f"You can only have from {2} up to {2**(32-cidr)} subnets")
+                continue
+        except ValueError:
+            print(f"Please try to enter a valid integer between {2} and {2**(32-cidr)}")
+            continue
+        else:
+            break
     network_bits = bits_calculator(y) # given to Network ID
     equal_subnets = 2**network_bits
     print(f"Your equal subnets will be : {equal_subnets}")
@@ -493,6 +523,24 @@ if cidr!=None and yz==1 and exception!=1:
         print("No Network Range")
     else:
         print(f"Usable Sub-Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
+    while True: # checks user input if they want to see all subnet addresses
+        start = "no"
+            l = str(input("Would you like to see all Network/Broadcast Subnet Addresses? [yes/no]: ")).strip().lower()
+            if l in ("yes","ye","yeah","y"):
+                start = "yes"
+                break
+            elif l in ("no","n","nope","nah"):
+                print("Understood")
+                break
+            else:
+                print("Please give a legitimate answer")
+                continue
+
+
+
+
+
+
     subnets(net1,net2,net3,net4,equal_subnets,new_cidr)
 elif cidr!=None and yz==1 and exception==1: # Checks if CIDR is /32 therefore can't be subnetted
     print(f"Cannot be subnetted further since it has only one network. (/{cidr} CIDR)")
@@ -501,12 +549,19 @@ elif cidr!=None and yz==1 and exception==1: # Checks if CIDR is /32 therefore ca
 
 #SUPERNET INPUTS/CALCULATIONS
 elif cidr!=None and yz==0 and exception!=0:
-    j = int(input("How many networks would you like to supernet to a single network? "))
-    while j>2**(cidr-0) or j<2:
-        print(f"You can only supernet from {2} up to {2**(cidr-0)} networks into one")
-        j = int(input("How many networks would you like to supernet to a single network? "))
+    while True:
+        try:
+            j = int(input(f"How many networks would you like to supernet to a single network? [{2}-{2**(cidr)}]"))
+            if j>2**(cidr) or j<2:
+                print(f"You can only supernet from {2} up to {2**(cidr)} networks into one")
+                continue
+        except ValueError:
+            print(f"Please try to enter a valid integer between {2} and {2**(cidr)}")
+            continue
+        else:
+            break
     network_bits = bits_calculator(j) # given to Host ID
-    networks_used = 2**network_bits
+    networks_used = 2**network_bits # equal networks used
     print(f"The amount of equal networks you will be using for supernetting will be: {networks_used}")
     new_cidr = cidr-network_bits
     if new_cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
