@@ -133,22 +133,13 @@ def bin_to_dec(L):
     return number
 
 
-# calls a function that returns the mask octades in binary so it can be compared with the IPv4 address later on for the broadcast address
-def mask_binary(a1,b1,c1,d1):
-    first_mask_octade = dec_to_bin(a1)
-    second_mask_octade = dec_to_bin(b1)
-    third_mask_octade = dec_to_bin(c1)
-    fourth_mask_octade = dec_to_bin(d1)
-    return first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade
-
-
-# calls a function that returns the IPv4 octades in binary to save some clutter
-def octade_binary(a1,b1,c1,d1):
-    first_octade = dec_to_bin(a1)
-    second_octade = dec_to_bin(b1)
-    third_octade = dec_to_bin(c1)
-    fourth_octade = dec_to_bin(d1)
-    return first_octade,second_octade,third_octade,fourth_octade
+# calls a function that returns 4 decimal octades into 4 binary octades (saving some clutter)
+def four_converter(a1,b1,c1,d1):
+    a = dec_to_bin(a1)
+    b = dec_to_bin(b1)
+    c = dec_to_bin(c1)
+    d = dec_to_bin(d1)
+    return a,b,c,d
 
 
 # calls a function that takes in 8 arguments (4 octades for mask, 4 for ip), converts them to binary, compares them, and returns the network address octades
@@ -244,13 +235,13 @@ def bits_calculator(answer):
             return i
 
 
+# calls a function that takes the new cidr and uses the mask calculator from cidr to find the new mask
+def new_mask(new_cidr):
+    a,b,c,d = mask_calculator_cidr(new_cidr)
+    return a,b,c,d
+
+
 # ---------------------------------------------- SUBNET PORTION ----------------------------------------------
-
-# calls a function that simply takes the new cidr and uses the mask calculator from cidr to find the new mask
-def subnet_mask(new_cidr):
-    first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = mask_calculator_cidr(new_cidr)
-    return first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade
-
 
 # calls a function that converts a decimal number to a binary number in a stored list (32 digits check to use in subnets function)
 def dec_to_binx(x):
@@ -306,14 +297,6 @@ def subnets(n1,n2,n3,n4,equal_subnets,new_cidr):
             dbroadx = dec_to_binx(dbroad) # converts it into a 32 bit binary list
             b1,b2,b3,b4 = converter(dbroadx) # splits the 32 bit binary list into 4 then returns them as decimals
             print(f"{counter}: Network Address: {n1}.{n2}.{n3}.{n4}  Broadcast Address: {b1}.{b2}.{b3}.{b4}")
-
-
-# ---------------------------------------------- SUPERNET PORTION ----------------------------------------------
-
-# calls a function that simply takes the new cidr and uses the mask calculator from cidr to find the new mask
-def supernet_mask(new_cidr):
-    first_supmask_octade,second_supmask_octade,third_supmask_octade,fourth_supmask_octade = mask_calculator_cidr(new_cidr)
-    return first_supmask_octade,second_supmask_octade,third_supmask_octade,fourth_supmask_octade
 
 
 # ---------------------------------------------- MAIN PROGRAM ----------------------------------------------
@@ -427,8 +410,8 @@ else:
 
 # BINARY CONVERSION FOR NORMAL ADDRESSES
 if cidr!=None:
-    first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade = mask_binary(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade) # Returns the mask in binary octades
-    first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade = octade_binary(first_octade,second_octade,third_octade,fourth_octade) # Returns the IPv4 in binary octades
+    first_binmask_octade,second_binmask_octade,third_binmask_octade,fourth_binmask_octade = four_converter(first_mask_octade,second_mask_octade,third_mask_octade,fourth_mask_octade) # Returns the mask in binary octades
+    first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade = four_converter(first_octade,second_octade,third_octade,fourth_octade) # Returns the IPv4 in binary octades
 
 
 
@@ -495,7 +478,7 @@ if cidr!=None and yz==1 and exception!=1:
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
     elif new_cidr==32:
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used in routing tables to identify specific hosts, since they only have 1 address in total.")
-    first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = subnet_mask(new_cidr)
+    first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade = new_mask(new_cidr)
     print(f"New Subnet Mask: {first_submask_octade}.{second_submask_octade}.{third_submask_octade}.{fourth_submask_octade}")
     print(f"New CIDR: /{new_cidr}")
     usable_hosts = find_usable_hosts(new_cidr)
@@ -503,7 +486,7 @@ if cidr!=None and yz==1 and exception!=1:
         print(f"Usable Hosts: {usable_hosts}")
     else:
         print("No Usable Hosts")
-    first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade = mask_binary(first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade) # turns the subnet mask octades to binary
+    first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade = four_converter(first_submask_octade,second_submask_octade,third_submask_octade,fourth_submask_octade) # turns the subnet mask octades to binary
     subnet1,subnet2,subnet3,subnet4 = get_network_address(first_binsubmask_octade,second_binsubmask_octade,third_binsubmask_octade,fourth_binsubmask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the subnet mask octades (in binary from above) by comparing to the normal IPv4 octades in binary
     first_subnet_octade = bin_to_dec(subnet1) # returns them back to decimal
     second_subnet_octade = bin_to_dec(subnet2)
@@ -525,23 +508,24 @@ if cidr!=None and yz==1 and exception!=1:
         print(f"Usable Sub-Network Range: {nn1}.{nn2}.{nn3}.{nn4} - {bn1}.{bn2}.{bn3}.{bn4}")
     while True: # checks user input if they want to see all subnet addresses
         start = "no"
-            l = str(input("Would you like to see all Network/Broadcast Subnet Addresses? [yes/no]: ")).strip().lower()
-            if l in ("yes","ye","yeah","y"):
-                start = "yes"
-                break
-            elif l in ("no","n","nope","nah"):
-                print("Understood")
-                break
-            else:
-                print("Please give a legitimate answer")
-                continue
-
-
-
-
-
-
-    subnets(net1,net2,net3,net4,equal_subnets,new_cidr)
+        l = str(input("Would you like to see all Network/Broadcast Sub-net Addresses? [yes/no]: ")).strip().lower()
+        if l in ("yes","ye","yeah","y"):
+            start = "yes"
+            break
+        elif l in ("no","n","nope","nah"):
+            print("Understood")
+            break
+        else:
+            print("Please give a legitimate answer")
+            continue
+    if start=="yes" and equal_subnets<=1024:
+        subnets(net1,net2,net3,net4,equal_subnets,new_cidr)
+    else:
+        proceed = str(input(f"Sub-net addresses appear to be {equal_subnets} over 1024. To proceed, enter {"OVERRIDE"}. Otherwise, enter any other key: ")).strip().lower()
+        if proceed=="override":
+            subnets(net1,net2,net3,net4,equal_subnets,new_cidr)
+        else:
+            print("Understood, aborting")
 elif cidr!=None and yz==1 and exception==1: # Checks if CIDR is /32 therefore can't be subnetted
     print(f"Cannot be subnetted further since it has only one network. (/{cidr} CIDR)")
 
@@ -551,7 +535,7 @@ elif cidr!=None and yz==1 and exception==1: # Checks if CIDR is /32 therefore ca
 elif cidr!=None and yz==0 and exception!=0:
     while True:
         try:
-            j = int(input(f"How many networks would you like to supernet to a single network? [{2}-{2**(cidr)}]"))
+            j = int(input(f"How many networks would you like to supernet to a single network? [{2}-{2**(cidr)}]: "))
             if j>2**(cidr) or j<2:
                 print(f"You can only supernet from {2} up to {2**(cidr)} networks into one")
                 continue
@@ -566,7 +550,7 @@ elif cidr!=None and yz==0 and exception!=0:
     new_cidr = cidr-network_bits
     if new_cidr==31: # check for edge cases (cidr /31 or /32 have no usable hosts therefore no network range is possible)
         print(f"Note: IPv4 addresses with a /{new_cidr} CIDR are typically used for Point-to-point links (P2P) since they only have 2 addresses in total for Usable Hosts.")
-    first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade = supernet_mask(new_cidr)
+    first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade = new_mask(new_cidr)
     print(f"New Supernet Mask: {first_supermask_octade}.{second_supermask_octade}.{third_supermask_octade}.{fourth_supermask_octade}")
     print(f"New CIDR: /{new_cidr}")
     usable_hosts = find_usable_hosts(new_cidr)
@@ -574,7 +558,7 @@ elif cidr!=None and yz==0 and exception!=0:
         print(f"Usable Hosts: {usable_hosts}")
     else:
         print("No Usable Hosts")
-    first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade = mask_binary(first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade) # turns the supernet mask octades to binary
+    first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade = four_converter(first_supermask_octade,second_supermask_octade,third_supermask_octade,fourth_supermask_octade) # turns the supernet mask octades to binary
     supernet1,supernet2,supernet3,supernet4 = get_network_address(first_binsupermask_octade,second_binsupermask_octade,third_binsupermask_octade,fourth_binsupermask_octade,first_bin_octade,second_bin_octade,third_bin_octade,fourth_bin_octade) # finds the network address binary octades through the supernet mask octades (in binary from above) by comparing to the normal IPv4 octades in binary
     first_supernet_octade = bin_to_dec(supernet1) # returns them back to decimal
     second_supernet_octade = bin_to_dec(supernet2)
