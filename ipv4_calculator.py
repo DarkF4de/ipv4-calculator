@@ -521,7 +521,7 @@ if cidr!=None and yz==1 and exception!=1:
     if start=="yes" and equal_subnets<=1024:
         subnets(net1,net2,net3,net4,equal_subnets,new_cidr)
     else:
-        proceed = str(input(f"Sub-net addresses appear to be {equal_subnets} over 1024. To proceed, enter {"OVERRIDE"}. Otherwise, enter any other key: ")).strip().lower()
+        proceed = str(input(f"Sub-net addresses appear to be {equal_subnets} over 1024. To proceed, enter OVERRIDE. Otherwise, enter any other key: ")).strip().lower()
         if proceed=="override":
             subnets(net1,net2,net3,net4,equal_subnets,new_cidr)
         else:
