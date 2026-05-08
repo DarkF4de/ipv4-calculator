@@ -22,14 +22,14 @@ Obviously, it ended up being way more of a Python learning project than a networ
 ## Installation & Usage
 **Linux/macOS:**
 ```bash
-git clone https://github.com/DarkF4de/ipv4-calculator.git
+git clone https://github.com/agg-kantas/ipv4-calculator.git
 cd ipv4-calculator
 python3 ipv4_calculator.py
 ```
 
 **Windows:**
 ```cmd
-git clone https://github.com/DarkF4de/ipv4-calculator.git
+git clone https://github.com/agg-kantas/ipv4-calculator.git
 cd ipv4-calculator
 python ipv4_calculator.py
 ```
